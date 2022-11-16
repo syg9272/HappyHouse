@@ -1,5 +1,7 @@
 # happyhouse
 
+Happy House 🏡
+
 ## Project setup
 ```
 npm install
