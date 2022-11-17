@@ -5,8 +5,8 @@
         <div class="title">Find Best Place For Living</div>
         <input class="location-search" type="text" placeholder="지역 검색" />
         <div>
-          <button @click="moveMap()" class="btn-show-more">Show more</button>
-          <button class="btn-hot-item">Hot item</button>
+          <button class="btn-show-more">Show more</button>
+          <!-- <button class="btn-hot-item">Hot item</button> -->
         </div>
       </div>
 
@@ -19,7 +19,7 @@
           <div class="swiper-container">
             <div class="swiper-wrapper">
               <div class="swiper-slide">
-                <img :src="require('@/assets/img/apt1.png')" alt="recent-deal-apt" />
+                <img :src="aptImg" alt="recent-deal-apt" />
                 <div>
                   <div class="apt-name">000 아파트</div>
                   <div>대전광역시 대종로505번길 59</div>
@@ -27,7 +27,7 @@
                 </div>
               </div>
               <div class="swiper-slide">
-                <img :src="require('@/assets/img/apt2.jpg')" alt="recent-deal-apt" />
+                <img :src="aptImg" alt="recent-deal-apt" />
                 <div>
                   <div class="apt-name">000 아파트</div>
                   <div>대전광역시 대종로505번길 59</div>
@@ -35,7 +35,15 @@
                 </div>
               </div>
               <div class="swiper-slide">
-                <img :src="require('@/assets/img/apt3.jpg')" alt="recent-deal-apt" />
+                <img :src="aptImg" alt="recent-deal-apt" />
+                <div>
+                  <div class="apt-name">000 아파트</div>
+                  <div>대전광역시 대종로505번길 59</div>
+                  <a href="javascript:void(0)" class="move-apt">자세히 보기</a>
+                </div>
+              </div>
+              <!-- <div class="swiper-slide">
+                <img :src="aptImg" alt="recent-deal-apt" />
                 <div>
                   <div class="apt-name">000 아파트</div>
                   <div>대전광역시 대종로505번길 59</div>
@@ -43,21 +51,13 @@
                 </div>
               </div>
               <div class="swiper-slide">
-                <img :src="require('@/assets/img/apt4.jpg')" alt="recent-deal-apt" />
+                <img :src="aptImg" alt="recent-deal-apt" />
                 <div>
                   <div class="apt-name">000 아파트</div>
                   <div>대전광역시 대종로505번길 59</div>
                   <a href="javascript:void(0)" class="move-apt">자세히 보기</a>
                 </div>
-              </div>
-              <div class="swiper-slide">
-                <img :src="require('@/assets/img/apt5.jpg')" alt="recent-deal-apt" />
-                <div>
-                  <div class="apt-name">000 아파트</div>
-                  <div>대전광역시 대종로505번길 59</div>
-                  <a href="javascript:void(0)" class="move-apt">자세히 보기</a>
-                </div>
-              </div>
+              </div> -->
             </div>
           </div>
           <div class="swiper-pagination"></div>
@@ -72,7 +72,7 @@
         <div class="recent-deal-list">
           <div class="swiper-container">
             <div class="swiper-wrapper">
-              <div class="swiper-slide">
+              <div style="background-image: URL(@/assets/img/apt6.jpg)" class="swiper-slide">
                 <div>
                   <div class="apt-name">000 아파트</div>
                   <div>
@@ -81,7 +81,7 @@
                   </div>
                 </div>
               </div>
-              <div class="swiper-slide">
+              <div style="background-image: URL(@/assets/img/apt13.jpg)" class="swiper-slide">
                 <div>
                   <div class="apt-name">000 아파트</div>
                   <div>
@@ -90,7 +90,7 @@
                   </div>
                 </div>
               </div>
-              <div class="swiper-slide">
+              <div style="background-image: URL(@/assets/img/apt8.jpg)" class="swiper-slide">
                 <div>
                   <div class="apt-name">000 아파트</div>
                   <div>
@@ -99,7 +99,7 @@
                   </div>
                 </div>
               </div>
-              <div class="swiper-slide">
+              <div style="background-image: URL(@/assets/img/apt10.jpg)" class="swiper-slide">
                 <div>
                   <div class="apt-name">000 아파트</div>
                   <div>
@@ -108,7 +108,7 @@
                   </div>
                 </div>
               </div>
-              <div class="swiper-slide">
+              <div style="background-image: URL(@/assets/img/apt1.png)" class="swiper-slide">
                 <div>
                   <div class="apt-name">000 아파트</div>
                   <div>
@@ -137,7 +137,7 @@
             <div class="swiper-slide">
               <a href="javascript:void(0)">버전 업데이트와 시스템 개선 및 점검 안내 </a>
             </div>
-            <div class="swiper-slide">
+            <!-- <div class="swiper-slide">
               <a href="javascript:void(0)">[이벤트] 2022 이벤트</a>
             </div>
             <div class="swiper-slide">
@@ -145,7 +145,7 @@
             </div>
             <div class="swiper-slide">
               <a href="javascript:void(0)">시스템 개선 및 점검 안내 </a>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -173,7 +173,9 @@
 export default {
   name: "AppMain",
   data() {
-    return {};
+    return {
+      aptImg: require("../assets/img/apt2.jpg"),
+    };
   },
   methods: {
     moveMap() {
@@ -321,12 +323,6 @@ export default {
 }
 
 .main .title {
-  text-align: center;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 32px;
-  line-height: 48px;
-  color: #0a1151;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -363,10 +359,6 @@ export default {
 .main .hot-item .title {
   margin-left: 350px;
   animation: fadeInRight 1s;
-}
-
-.main .hot-item .swiper-slide {
-  background-image: url("@/assets/img/apt13.jpg");
 }
 
 .main .title .content-title {
@@ -424,33 +416,37 @@ export default {
 .main .recent-deal-list.hide {
   height: 0;
 }
-.main .recent-deal .swiper-container {
-  width: calc(400px * 3 + 20px);
+.main .recent-deal-list .swiper-container {
+  width: calc(400px * 3 + 120px);
   height: 360px;
   /* 화면 정중앙에 위치시키는 방법 */
   position: absolute;
   padding-top: 30px;
   top: 30px;
   left: 50%;
-  margin-left: calc((400px * 3 + 20px) / -2);
+  margin-left: calc((400px * 3 + 120px) / -2);
 }
-.main .recent-deal .swiper-slide {
+.main .recent-deal-list .swiper-slide {
   width: 400px;
   height: 300px;
-  opacity: 0.4;
+  opacity: 1;
   transition: opacity 1s;
   position: relative;
   display: flex;
   flex-direction: column;
   border-radius: 10px;
   border: 1px solid #edeef2;
+  margin: 0 20px;
+}
+
+.main .recent-deal-list .swiper-slide:hover {
+  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  transform: scale(105%);
+  z-index: 1;
 }
 
 .main .hot-item .recent-deal-list {
   height: 500px;
-  position: relative;
-  transition: height 0.4s;
-  overflow: hidden;
 }
 
 .main .hot-item .swiper-container {
@@ -462,19 +458,11 @@ export default {
 }
 
 .main .hot-item .swiper-slide {
-  width: 280px;
+  width: 280px !important;
   height: 400px;
-  opacity: 0.4;
   background-repeat: no-repeat;
   object-fit: cover;
   margin: 20px;
-  transition: opacity 1s;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  border-radius: 10px;
-  border: 1px solid #edeef2;
-  margin: 0 20px;
 }
 
 .main .hot-item .swiper-slide .apt-name {

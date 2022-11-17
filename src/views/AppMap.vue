@@ -1,7 +1,13 @@
 <template>
   <main>
     <div class="map">
-      <input class="location-search" type="text" placeholder="지역 검색" />
+      <input
+        @keyup="findLocation()"
+        v-model="location"
+        class="location-search"
+        type="text"
+        placeholder="지역 검색"
+      />
       <div class="map-search">
         <div>
           <img src="@/assets/img/mark.png" alt="mark" />
@@ -39,6 +45,14 @@
 
 export default {
   name: "AppMap",
+  data() {
+    return {
+      location: null,
+    };
+  },
+  methods: {
+    findLocation() {},
+  },
 };
 </script>
 
@@ -74,9 +88,14 @@ main .map .location-search:focus {
   border-radius: 10px 10px 0 0;
 }
 
+main .map .location-search:focus + .map-search {
+  visibility: visible;
+}
+
 main .map .map-search {
   width: 457px;
   position: relative;
+  visibility: hidden;
   top: 20px;
   left: 34px;
   padding: 15px 20px;

@@ -7,14 +7,19 @@
         </router-link>
         <router-link :to="{ name: 'map' }" class="nav-menu"> MAP </router-link>
         <router-link :to="{ name: 'like' }" class="nav-menu"> LIKE </router-link>
-        <a class="nav-menu" href="#">SERVICE</a>
+        <router-link :to="{ name: 'service' }" class="nav-menu">SERVICE</router-link>
       </div>
       <div>
-        <router-link :to="{ name: 'login' }" class="nav-menu">SIGN IN</router-link>
-        <router-link :to="{ name: 'register' }" class="nav-menu">SIGN UP</router-link>
-        <router-link :to="{ name: 'mypage' }" class="nav-menu">MYPAGE</router-link>
+        <router-link v-if="!userInfo" :to="{ name: 'login' }" class="nav-menu">SIGN IN</router-link>
+        <a v-else @click.prevent="onClickLogout()" :to="{ name: 'main' }" class="nav-menu"
+          >LOGOUT</a
+        >
+        <router-link v-if="!userInfo" :to="{ name: 'register' }" class="nav-menu"
+          >SIGN UP</router-link
+        >
+        <router-link v-else :to="{ name: 'mypage' }" class="nav-menu">MYPAGE</router-link>
         <div class="profile-img">
-          <img class="profile" src="@/assets/img/profile.png" alt="profile" />
+          <img class="profile" :src="user.img" alt="profile" />
         </div>
       </div>
     </nav>
@@ -22,12 +27,41 @@
 </template>
 
 <script>
+import { mapState, mapGetters, mapActions } from "vuex";
+
+const memberStore = "memberStore";
+
 export default {
   name: "TheHeader",
   data() {
-    return {};
+    return {
+      user: {
+        img: require("../../assets/img/profile.png"),
+      },
+    };
   },
-  // created 에서 로그인 상태면 logout mypage로 변경
+  computed: {
+    ...mapState(memberStore, ["isLogin", "userInfo"]),
+    ...mapGetters(["checkUserInfo"]),
+  },
+  methods: {
+    ...mapActions(memberStore, ["userLogout"]),
+    // ...mapMutations(memberStore, ["SET_IS_LOGIN", "SET_USER_INFO"]),
+    onClickLogout() {
+      // this.SET_IS_LOGIN(false);
+      // this.SET_USER_INFO(null);
+      // sessionStorage.removeItem("access-token");
+      // if (this.$route.path != "/") this.$router.push({ name: "main" });
+      console.log(this.userInfo.userid);
+      //vuex actions에서 userLogout 실행(Backend에 저장 된 리프레시 토큰 없애기
+      //+ satate에 isLogin, userInfo 정보 변경)
+      // this.$store.dispatch("userLogout", this.userInfo.userid);
+      this.userLogout(this.userInfo.userid);
+      sessionStorage.removeItem("access-token"); //저장된 토큰 없애기
+      sessionStorage.removeItem("refresh-token"); //저장된 토큰 없애기
+      if (this.$route.path != "/") this.$router.push({ name: "main" });
+    },
+  },
 };
 </script>
 
@@ -53,6 +87,10 @@ header > nav > div {
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+header > nav > div > a {
+  cursor: pointer;
 }
 
 header > nav > div > a,

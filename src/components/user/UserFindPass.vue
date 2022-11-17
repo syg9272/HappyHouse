@@ -1,95 +1,45 @@
 <template>
   <main>
-    <div class="login user-login">
-      <div class="title">SIGN IN</div>
+    <div class="login find-pass">
+      <div class="title">FIND PASSWORD</div>
       <div class="login-input">
         <label>ID</label>
         <input v-model="user.id" type="text" />
       </div>
       <div class="login-input">
-        <div class="login-pass">
-          <label>Password</label>
-          <div>
-            <a @click.prevent="changePass()">
-              <img class="hide" src="@/assets/img/hide.png" alt="hide" />
-            </a>
-            <label>Hide</label>
-          </div>
-        </div>
-        <input v-model="user.pass" type="password" name="pass" />
-      </div>
-      <div class="login-input">
-        <div>
-          <a @click.prevent="moveFindPass()">Forget your password?</a>
-          <div>
-            <div class="save-id">save id</div>
-            <div class="save-check">
-              <input v-model="user.saveid" type="checkbox" />
-            </div>
-          </div>
-        </div>
+        <label>Name</label>
+        <input v-model="user.name" type="text" />
       </div>
       <div class="login-input find-pass">
-        <button @click="moveRegister()" class="signup-btn">Create an account</button>
-        <button @click="login()" class="signin-btn">Sign in</button>
+        <button @click="moveLogin()" class="signup-btn">CANCEL</button>
+        <button @click="findPass()" class="signin-btn">FIND</button>
       </div>
     </div>
   </main>
 </template>
 
 <script>
-// import axios from "axios";
-// import http from "@/api/http";
-
-import { mapState, mapActions } from "vuex";
-
-const memberStore = "memberStore";
+import http from "@/api/http";
 
 export default {
-  name: "UserLogin",
+  name: "UserFindPass",
   data() {
     return {
-      hide: true,
       user: {
         id: null,
-        pass: null,
-        saveid: null,
+        name: null,
       },
     };
   },
-  created() {
-    // if(this.userInfo.saveid == )
-  },
-  computed: {
-    ...mapState(memberStore, ["isLogin", "isLoginError", "userInfo"]),
-  },
   methods: {
-    ...mapActions(memberStore, ["userConfirm", "getUserInfo"]),
-    changePass() {
-      console.log(this.hide);
-      if (this.hide) {
-        this.hide = !this.hide;
-        document.getElementsByName("pass")[0].type = "text";
-      } else {
-        this.hide = !this.hide;
-        document.getElementsByName("pass")[0].type = "password";
-      }
+    moveLogin() {
+      this.$router.push({ name: "login" });
     },
-    moveFindPass() {
-      this.$router.push({ name: "findpass" });
-    },
-    moveRegister() {
-      this.$router.push({ name: "register" });
-    },
-    async login() {
-      await this.userConfirm(this.user);
-      let token = sessionStorage.getItem("access-token");
-      // console.log("1. confirm() token >> " + token);
-      if (this.isLogin) {
-        await this.getUserInfo(token);
-        // console.log("4. confirm() userInfo :: ", this.userInfo);
-        this.$router.push({ name: "main" });
-      }
+    findPass() {
+      http.post("/member/findpwd", this.user).then((data) => {
+        alert(data.data.pass);
+      });
+      this.$router.push({ name: "login" });
     },
   },
 };
@@ -140,7 +90,6 @@ main .login-input input {
   border: 1px solid #666666;
 }
 main .login-input button {
-  cursor: pointer;
   font-style: normal;
   font-weight: 400;
   font-size: 18px;
@@ -163,11 +112,6 @@ main .login .save-id {
 main .login .save-check {
   padding-top: 2px;
   margin-left: 5px;
-  cursor: pointer;
-}
-
-main .login .save-check input {
-  cursor: pointer;
 }
 
 main .login .signup-btn {
@@ -187,7 +131,6 @@ main .login-input .login-pass > div {
 }
 
 main .login-input .login-pass a {
-  cursor: pointer;
   padding-top: 3px;
   margin-right: 5px;
 }
