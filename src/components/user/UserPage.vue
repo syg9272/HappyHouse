@@ -55,19 +55,13 @@ export default {
       passMsg: null,
       userImg: null,
       img: "profile.png",
-      // user: {
-      //   img: require("../../assets/img/profile.png"),
-      //   name: null,
-      //   pass: null,
-      //   email: null,
-      //   phoneNumber: null,
-      // },
     };
   },
   computed: {
     ...mapState(memberStore, ["userInfo"]),
   },
   created() {
+    // 현재 토큰에 저장되어 있는 user 프로필 여부에 따라 이미지 경로 설정
     if (this.userInfo.img == null) {
       this.userImg = require("../../assets/img/profile.png");
     } else {
@@ -78,24 +72,27 @@ export default {
   },
   methods: {
     removeProfile() {
+      // user 프로필 이미지 띄우기
       this.img = "profile.png";
       this.userImg = require("../../assets/img/profile.png");
     },
     passwordCheck() {
+      // 비밀번호 입력창 두 개가 일치한지 판별
       if (this.passCheck != this.userInfo.pass) {
         this.passMsg = "비밀번호가 일치하지 않습니다";
       } else {
-        // 아이디가 있는지 체크
         this.passMsg = null;
       }
     },
     deleteUser() {
+      // user 탈퇴처리 후 메인으로 이동
       http.delete(`/member/quit/${this.userInfo.id}`).then((data) => {
         console.log(data);
       });
       this.$router.push({ name: "main" });
     },
     moveMain() {
+      // user 정보 수정사항 업데이트 후 메인으로 이동
       http.put("/member/modify", this.userInfo).then((data) => {
         console.log(data);
       });

@@ -78,6 +78,11 @@ const routes = [
         name: "serviceview",
         component: () => import("@/components/service/ServiceView"),
       },
+      {
+        path: "modify",
+        name: "servicemodify",
+        component: () => import("@/components/service/ServiceModify"),
+      },
     ],
   },
   {

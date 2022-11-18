@@ -35,6 +35,9 @@
         </div>
       </div>
       <div class="notice-area">
+        <div class="notice-write">
+          <button @click="writeNotice()" class="write-btn" v-if="isAdmin">글 작성</button>
+        </div>
         <div class="notice-list">
           <div class="no-articles" v-if="!articles.length">등록된 공지사항이 없습니다.</div>
           <div
@@ -42,6 +45,7 @@
             v-for="article in articles"
             :key="article.articleNo"
             :article="article"
+            @click="moveView(article.articleNo)"
           >
             <div>
               <div class="notice-articleNo">{{ article.articleNo }}</div>
@@ -95,17 +99,23 @@
 
 <script>
 import http from "@/api/http";
+import { mapState } from "vuex";
+
+const memberStore = "memberStore";
 
 export default {
   name: "ServiceNotice",
   data() {
     return {
+      isAdmin: false,
+
       key: "선택안함",
       word: "",
       pgno: 1,
       articles: [],
       isSelected: false,
       toggleImg: null,
+
       pageNum: [],
       startPage: 1,
       endPage: 1,
@@ -118,10 +128,26 @@ export default {
     };
   },
   methods: {
-    moveView() {
-      this.$router.push({ name: "serviceview" });
+    writeNotice() {},
+    moveView(data) {
+      // 글 상세보기로 이동
+      var newKey = "";
+      if (this.key == "선택안함") newKey = "";
+      else if (this.key == "제목") newKey = "subject";
+      else newKey = "userid";
+      this.$router.push({
+        name: "serviceview",
+        params: {
+          articleno: data,
+          pgno: this.pgno,
+          key: newKey,
+          word: this.word,
+        },
+      });
+      // this.$router.go(0);
     },
     selectBtn() {
+      // 검색조건 선택할 경우 가려져있던 option창 보여주기
       this.isSelected = !this.isSelected;
       if (this.isSelected) this.toggleImg = require("../../assets/img/toggle-close.png");
       else {
@@ -129,8 +155,19 @@ export default {
       }
     },
     changePgno(event) {
-      console.log(event.target.getAttribute("data-pg"));
-      console.log("@@@@@@@@@@");
+      // 페이지 바꿀 때마다 공지사항 목록 받아오기
+      this.pgno = event.target.getAttribute("data-pg");
+      // 바뀐 페이지 태그 색상 변경
+      var arr = document.getElementsByClassName("page-link");
+      console.log("arr : ", this.pgno);
+      Array.from(arr).forEach((element) => {
+        if (element.getAttribute("data-pg") == this.pgno) {
+          element.style.color = "#0a1151";
+          console.log("element : ", element);
+        } else {
+          element.style.color = "#b4b4b4";
+        }
+      });
       http
         .get("/notice/list", {
           params: {
@@ -156,16 +193,20 @@ export default {
 
           for (var i = this.startPage; i <= this.endPage; i++) {
             this.pageNum.push(i);
-            console.log(i);
+            // console.log(i);
           }
         });
     },
     changeKey(event) {
+      // select option창 열고 닫기
       this.isSelected = !this.isSelected;
+      // select창에 선택된 option 표시
       this.key = event.target.innerText;
+      // 토글 이미지 변경
       this.toggleImg = require("../../assets/img/toggle-open.png");
     },
     searchList() {
+      // 검색결과 공지사항 목록 받아오기
       var newKey = "";
       if (this.key == "선택안함") newKey = "";
       else if (this.key == "제목") newKey = "subject";
@@ -183,6 +224,7 @@ export default {
           this.key = "선택안함";
           this.word = "";
 
+          // 페이징 관련 데이터
           this.pageNum = [];
           this.startPage = data.data.startPage;
           this.startRange = data.data.startRange;
@@ -198,18 +240,24 @@ export default {
 
           for (var i = this.startPage; i <= this.endPage; i++) {
             this.pageNum.push(i);
-            console.log(i);
           }
         });
       this.toggleImg = require("../../assets/img/toggle-open.png");
     },
   },
+  computed: {
+    ...mapState(memberStore, ["userInfo"]),
+  },
   created() {
+    // 관리자 여부 파악
+    if (this.userInfo.id == "admin") this.isAdmin = true;
+    else this.isAdmin = false;
     http
       .get("/notice/list", {
         params: {
           key: this.key == "선택안함" ? "" : this.key,
           word: this.word,
+          // pgno: this.$route.params.pgno,
           pgno: this.pgno,
         },
       })
@@ -219,6 +267,7 @@ export default {
         this.key = "선택안함";
         this.word = "";
 
+        // 페이징 관련 데이터
         this.startPage = data.data.startPage;
         this.startRange = data.data.startRange;
         this.endPage = data.data.endPage;
@@ -233,14 +282,20 @@ export default {
 
         for (var i = this.startPage; i <= this.endPage; i++) {
           this.pageNum.push(i);
-          console.log(i);
         }
-
-        console.log(data.data.endPage);
-        console.log(this.startPage);
       });
     this.toggleImg = require("../../assets/img/toggle-open.png");
-    console.log(this.pageNum);
+  },
+  updated() {
+    // 현재 페이지 태그 색상 변경
+    var arr = document.getElementsByClassName("page-link");
+    Array.from(arr).forEach((element) => {
+      if (element.getAttribute("data-pg") == this.pgno) {
+        element.style.color = "#0a1151";
+      } else {
+        element.style.color = "#b4b4b4";
+      }
+    });
   },
 };
 </script>
@@ -369,6 +424,26 @@ export default {
   padding: 50px 0 50px 0;
 }
 
+.notice .notice-write {
+  /* position: absolute; */
+  display: flex;
+  flex-direction: column;
+  justify-content: right;
+  width: 55%;
+  margin: auto;
+}
+
+.notice .write-btn {
+  margin-left: 90%;
+  width: 80px;
+  height: 30px;
+  border-radius: 10px;
+  border: 0px;
+  background-color: #0a1151;
+  color: white;
+  cursor: pointer;
+}
+
 .notice .notice-list {
   height: 540px;
 }
@@ -444,14 +519,14 @@ export default {
   cursor: pointer;
 }
 
-.notice .page a {
+.page-link {
   margin: 0 10px;
   color: #b4b4b4;
   font-size: 16px;
   font-weight: bold;
 }
 
-.notice .page a:hover {
+.page-link:hover {
   color: #0a1151;
   cursor: pointer;
 }

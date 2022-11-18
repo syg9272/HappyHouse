@@ -106,6 +106,7 @@ export default {
       articles: [],
       isSelected: false,
       toggleImg: null,
+
       pageNum: [],
       startPage: 1,
       endPage: 1,
@@ -119,9 +120,11 @@ export default {
   },
   methods: {
     moveView() {
+      // 글 상세보기로 이동
       this.$router.push({ name: "serviceview" });
     },
     selectBtn() {
+      // 검색조건 선택할 경우 가려져있던 option창 보여주기
       this.isSelected = !this.isSelected;
       if (this.isSelected) this.toggleImg = require("../../assets/img/toggle-close.png");
       else {
@@ -129,8 +132,19 @@ export default {
       }
     },
     changePgno(event) {
-      console.log(event.target.getAttribute("data-pg"));
-      console.log("@@@@@@@@@@");
+      // 페이지 바꿀 때마다 공지사항 목록 받아오기
+      this.pgno = event.target.getAttribute("data-pg");
+      // 바뀐 페이지 태그 색상 변경
+      var arr = document.getElementsByClassName("page-link");
+      console.log("arr : ", this.pgno);
+      Array.from(arr).forEach((element) => {
+        if (element.getAttribute("data-pg") == this.pgno) {
+          element.style.color = "#0a1151";
+          console.log("element : ", element);
+        } else {
+          element.style.color = "#b4b4b4";
+        }
+      });
       http
         .get("/notice/list", {
           params: {
@@ -156,16 +170,20 @@ export default {
 
           for (var i = this.startPage; i <= this.endPage; i++) {
             this.pageNum.push(i);
-            console.log(i);
+            // console.log(i);
           }
         });
     },
     changeKey(event) {
+      // select option창 열고 닫기
       this.isSelected = !this.isSelected;
+      // select창에 선택된 option 표시
       this.key = event.target.innerText;
+      // 토글 이미지 변경
       this.toggleImg = require("../../assets/img/toggle-open.png");
     },
     searchList() {
+      // 검색결과 공지사항 목록 받아오기
       var newKey = "";
       if (this.key == "선택안함") newKey = "";
       else if (this.key == "제목") newKey = "subject";
@@ -183,6 +201,7 @@ export default {
           this.key = "선택안함";
           this.word = "";
 
+          // 페이징 관련 데이터
           this.pageNum = [];
           this.startPage = data.data.startPage;
           this.startRange = data.data.startRange;
@@ -198,7 +217,6 @@ export default {
 
           for (var i = this.startPage; i <= this.endPage; i++) {
             this.pageNum.push(i);
-            console.log(i);
           }
         });
       this.toggleImg = require("../../assets/img/toggle-open.png");
@@ -219,6 +237,7 @@ export default {
         this.key = "선택안함";
         this.word = "";
 
+        // 페이징 관련 데이터
         this.startPage = data.data.startPage;
         this.startRange = data.data.startRange;
         this.endPage = data.data.endPage;
@@ -233,14 +252,20 @@ export default {
 
         for (var i = this.startPage; i <= this.endPage; i++) {
           this.pageNum.push(i);
-          console.log(i);
         }
-
-        console.log(data.data.endPage);
-        console.log(this.startPage);
       });
     this.toggleImg = require("../../assets/img/toggle-open.png");
-    console.log(this.pageNum);
+  },
+  updated() {
+    // 현재 페이지 태그 색상 변경
+    var arr = document.getElementsByClassName("page-link");
+    Array.from(arr).forEach((element) => {
+      if (element.getAttribute("data-pg") == this.pgno) {
+        element.style.color = "#0a1151";
+      } else {
+        element.style.color = "#b4b4b4";
+      }
+    });
   },
 };
 </script>
@@ -419,18 +444,7 @@ export default {
   font-size: 12px;
 }
 
-/* .notice .notice-list .page {
-  margin-top: 40px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-} */
-
 .notice .pagenavigation {
-  /* position: fixed; */
-  /* bottom: 100px; */
-  /* left: 750px; */
-  /* margin: 0 auto; */
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -444,14 +458,14 @@ export default {
   cursor: pointer;
 }
 
-.notice .page a {
+.page-link {
   margin: 0 10px;
   color: #b4b4b4;
   font-size: 16px;
   font-weight: bold;
 }
 
-.notice .page a:hover {
+.page-link:hover {
   color: #0a1151;
   cursor: pointer;
 }
