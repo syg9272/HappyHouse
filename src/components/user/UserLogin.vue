@@ -24,7 +24,7 @@
           <div>
             <div class="save-id">save id</div>
             <div class="save-check">
-              <input v-model="user.saveid" type="checkbox" />
+              <input v-model="checkedValues" type="checkbox" value="true" />
             </div>
           </div>
         </div>
@@ -49,11 +49,12 @@ export default {
   name: "UserLogin",
   data() {
     return {
+      checkedValues: [],
       hide: true,
       user: {
         id: null,
         pass: null,
-        saveid: null,
+        saveid: false,
       },
     };
   },
@@ -66,6 +67,7 @@ export default {
   methods: {
     ...mapActions(memberStore, ["userConfirm", "getUserInfo"]),
     changePass() {
+      console.log(this.checkedValues);
       console.log(this.hide);
       if (this.hide) {
         this.hide = !this.hide;
@@ -82,6 +84,9 @@ export default {
       this.$router.push({ name: "register" });
     },
     async login() {
+      if (this.checkedValues.length > 0) {
+        this.user.saveid = "true";
+      }
       await this.userConfirm(this.user);
       let token = sessionStorage.getItem("access-token");
       // console.log("1. confirm() token >> " + token);

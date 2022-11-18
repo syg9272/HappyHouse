@@ -7,8 +7,8 @@
         <input v-model="user.id" type="text" />
       </div>
       <div class="login-input">
-        <label>Name</label>
-        <input v-model="user.name" type="text" />
+        <label>EMAIL</label>
+        <input v-model="user.email" type="text" />
       </div>
       <div class="login-input find-pass">
         <button @click="moveLogin()" class="signup-btn">CANCEL</button>
@@ -27,7 +27,7 @@ export default {
     return {
       user: {
         id: null,
-        name: null,
+        email: null,
       },
     };
   },
@@ -36,9 +36,10 @@ export default {
       this.$router.push({ name: "login" });
     },
     findPass() {
-      http.post("/member/findpwd", this.user).then((data) => {
-        alert(data.data.pass);
+      http.post("/member/sendEmail", this.user).then((data) => {
+        console.log(data.data);
       });
+      alert("입력한 이메일로 임시 비밀번호가 전송되었습니다.");
       this.$router.push({ name: "login" });
     },
   },
