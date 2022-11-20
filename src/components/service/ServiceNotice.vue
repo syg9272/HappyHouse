@@ -35,8 +35,8 @@
         </div>
       </div>
       <div class="notice-area">
-        <div class="notice-write">
-          <button @click="writeNotice()" class="write-btn" v-if="isAdmin">글 작성</button>
+        <div v-if="isAdmin" class="notice-write">
+          <button @click="writeNotice()" class="write-btn">글 작성</button>
         </div>
         <div class="notice-list">
           <div class="no-articles" v-if="!articles.length">등록된 공지사항이 없습니다.</div>
@@ -128,8 +128,11 @@ export default {
     };
   },
   methods: {
-    writeNotice() {},
+    writeNotice() {
+      this.$router.push({ name: "servicewrite" });
+    },
     moveView(data) {
+      console.log("list pgno: ", this.pgno);
       // 글 상세보기로 이동
       var newKey = "";
       if (this.key == "선택안함") newKey = "";
@@ -142,6 +145,7 @@ export default {
           pgno: this.pgno,
           key: newKey,
           word: this.word,
+          move: false,
         },
       });
       // this.$router.go(0);
@@ -250,7 +254,7 @@ export default {
   },
   created() {
     // 관리자 여부 파악
-    if (this.userInfo.id == "admin") this.isAdmin = true;
+    if (this.userInfo != null && this.userInfo.id == "admin") this.isAdmin = true;
     else this.isAdmin = false;
     http
       .get("/notice/list", {

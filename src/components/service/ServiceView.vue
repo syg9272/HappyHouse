@@ -45,6 +45,9 @@ export default {
     return {
       article: null,
       isAdmin: false,
+      pgno: null,
+      key: null,
+      word: null,
     };
   },
   methods: {
@@ -60,10 +63,10 @@ export default {
       this.$router.push({
         name: "servicemodify",
         params: {
-          articleno: this.article.articleno,
-          pgno: this.$route.params.pgno,
-          key: this.$route.params.key,
-          word: this.$route.params.word,
+          articleno: this.article.articleNo,
+          pgno: this.pgno,
+          key: this.key,
+          word: this.word,
         },
       });
     },
@@ -78,9 +81,9 @@ export default {
           })
           .then((data) => {
             console.log(data);
+            this.$router.push({ name: "service" });
           });
         // this.$router.go(-1);
-        this.$router.push({ name: "service" });
       }
     },
   },
@@ -89,7 +92,8 @@ export default {
   },
   created() {
     // 관리자 여부 파악
-    if (this.userInfo.id == "admin") this.isAdmin = true;
+    console.log("view!!!");
+    if (this.userInfo != null && this.userInfo.id == "admin") this.isAdmin = true;
     else this.isAdmin = false;
     http
       .get("/notice/view", {
@@ -102,8 +106,12 @@ export default {
       })
       .then((data) => {
         this.article = data.data.notice;
+        this.pgno = data.data.pgno;
+        this.key = data.data.key;
+        this.word = data.data.word;
         console.log(this.article);
       });
+    // console.log("",)
   },
 };
 </script>

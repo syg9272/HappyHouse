@@ -83,6 +83,26 @@ const routes = [
         name: "servicemodify",
         component: () => import("@/components/service/ServiceModify"),
       },
+      {
+        path: "write",
+        name: "servicewrite",
+        component: () => import("@/components/service/ServiceWrite"),
+      },
+      {
+        path: "qnaview",
+        name: "serviceqnaview",
+        component: () => import("@/components/service/ServiceQnaView"),
+      },
+      {
+        path: "qnamodify",
+        name: "serviceqnamodify",
+        component: () => import("@/components/service/ServiceQnaModify"),
+      },
+      {
+        path: "qnawrite",
+        name: "serviceqnawrite",
+        component: () => import("@/components/service/ServiceQnaWrite"),
+      },
     ],
   },
   {

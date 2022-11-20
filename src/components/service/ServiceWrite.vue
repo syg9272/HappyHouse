@@ -7,20 +7,28 @@
           <div class="view-type">공지사항</div>
           <input v-model="article.subject" class="view-title" />
         </div>
-        <div>{{ article.registerTime.substring(0, 10) }}</div>
+        <div>
+          <!-- <div class="view-hit">조회수 : {{ article.hit }}</div> -->
+          <!-- <div>{{ article.registerTime.substring(0, 10) }}</div> -->
+        </div>
       </div>
       <div class="view-content">
         <div class="content">
-          <input v-model="article.content" type="textarea" />
+          <textarea v-model="article.content" />
         </div>
         <div class="view-file">
-          <div>첨부파일 ({{ article.fileInfos.legth }})</div>
+          <div>첨부파일 ({{ article.fileInfos.length }})</div>
           <div class="file-list">
-            <a href="#"><input value="파일" type="file" /></a>
-            <a href="#">10월 21일 1.6 버전 업데이트 별첨.pdf</a>
+            <a href="#"
+              ><input value="파일" type="file" @change="changeFile" multiple="multiple"
+            /></a>
+            <!-- <a href="#">10월 21일 1.6 버전 업데이트 별첨.pdf</a> -->
           </div>
         </div>
-        <button @click="moveService()" class="move-list">목록으로</button>
+        <div class="modify-btn">
+          <button @click="moveList()" class="cancel-modify">취소</button>
+          <button @click="registArticle()" class="move-view">등록</button>
+        </div>
       </div>
     </div>
   </main>
@@ -33,32 +41,34 @@ import http from "@/api/http";
 // const memberStore = "memberStore";
 
 export default {
-  name: "ServiceView",
+  name: "ServiceWrite",
   data() {
     return {
-      article: null,
+      article: {
+        id: "admin",
+        subject: null,
+        content: null,
+        fileInfos: [],
+      },
     };
   },
   methods: {
-    moveService() {
-      this.$router.push({ name: "service" });
+    moveList() {
+      this.$router.push({ name: "servicenotice" });
+    },
+    registArticle() {
+      console.log(this.article);
+      http.post("/notice/register", this.article).then((data) => {
+        console.log(data);
+        this.$router.push({ name: "servicenotice" });
+      });
+    },
+    changeFile(e) {
+      console.log(e.target.files);
+      this.article.fileInfos = e.target.files;
     },
   },
-  created() {
-    http
-      .get("/notice/view", {
-        params: {
-          articleno: this.$route.params.articleno,
-          pgno: this.$route.params.pgno,
-          key: this.$route.params.key,
-          word: this.$route.params.word,
-        },
-      })
-      .then((data) => {
-        this.article = data.data.notice;
-        console.log(this.article);
-      });
-  },
+  created() {},
 };
 </script>
 
@@ -97,6 +107,30 @@ export default {
   font-size: 16px;
 }
 
+.view .view-header .view-hit {
+  margin-right: 50px;
+}
+
+.view .view-edit {
+  padding: 40px 400px 0 72%;
+  display: flex;
+  flex-direction: row;
+}
+
+.view .view-edit a {
+  font-size: 16px;
+  font-weight: normal;
+  margin-left: 30px;
+  width: 40px;
+  color: #8e8e8e;
+  cursor: pointer;
+}
+
+.view .view-edit a:hover {
+  color: #0a1151;
+  font-weight: bold;
+}
+
 .view .view-content {
   padding: 50px 400px;
   display: flex;
@@ -107,6 +141,7 @@ export default {
   line-height: 40px;
   font-size: 16px;
   min-height: 330px;
+  padding: 0 50px;
 }
 
 .view .view-content .view-file {
@@ -146,15 +181,41 @@ export default {
   opacity: 50%;
 }
 
-.view .view-content .move-list {
+.view .view-content button {
   width: 122px;
   height: 50px;
-  border: 0px;
+  border: 1px solid #0a1151;
   border-radius: 5px;
-  background-color: #0a1151;
-  color: white;
+  background-color: white;
+  color: #0a1151;
   font-weight: bold;
   font-size: 16px;
-  margin: auto;
+}
+
+.view .view-content button:hover {
+  background-color: #0a1151;
+  color: white;
+  border: 0px;
+}
+
+.view .view-content textarea {
+  width: 100%;
+  height: 100%;
+}
+
+.view .modify-btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.view .modify-btn .cancel-modify {
+  justify-content: right;
+  margin-right: 10px;
+}
+
+.view .modify-btn .move-view {
+  justify-content: left;
+  margin-left: 10px;
 }
 </style>

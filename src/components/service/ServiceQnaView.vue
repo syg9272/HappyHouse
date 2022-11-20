@@ -1,32 +1,33 @@
 <template>
   <main>
     <div class="view">
-      <div class="title">공지사항</div>
+      <div class="title">FQA</div>
       <div class="view-header">
         <div>
-          <div class="view-type">공지사항</div>
-          <input v-model="article.subject" class="view-title" />
+          <div class="view-type">FQA</div>
+          <div class="view-title">[자주 묻는 질문] {{ article.subject }}</div>
         </div>
         <div>
           <div class="view-hit">조회수 : {{ article.hit }}</div>
           <div>{{ article.registerTime.substring(0, 10) }}</div>
         </div>
       </div>
+      <div v-if="isAdmin" class="view-edit">
+        <a @click="moveModify()">수정</a>
+        <a @click="moveDelete()">삭제</a>
+      </div>
       <div class="view-content">
         <div class="content">
-          <textarea v-model="article.content" />
+          {{ article.content }}
         </div>
         <div class="view-file">
           <div>첨부파일 ({{ article.fileInfos.legth }})</div>
           <div class="file-list">
-            <a href="#"><input value="파일" type="file" /></a>
+            <a href="#"><img src="@/assets/img/file.png" alt="file" /></a>
             <a href="#">10월 21일 1.6 버전 업데이트 별첨.pdf</a>
           </div>
         </div>
-        <div class="modify-btn">
-          <button @click="moveView()" class="cancel-modify">취소</button>
-          <button @click="modifyArticle()" class="move-view">수정</button>
-        </div>
+        <button @click="moveService()" class="move-list">목록으로</button>
       </div>
     </div>
   </main>
@@ -34,49 +35,68 @@
 
 <script>
 import http from "@/api/http";
-// import { mapState } from "vuex";
+import { mapState } from "vuex";
 
-// const memberStore = "memberStore";
+const memberStore = "memberStore";
 
 export default {
-  name: "ServiceModify",
+  name: "ServiceQnaView",
   data() {
     return {
       article: null,
+      isAdmin: false,
       pgno: null,
       key: null,
       word: null,
     };
   },
   methods: {
-    moveView() {
-      console.log("moveView: ", this.article);
-      // 글 상세보기로 이동
+    moveService() {
       this.$router.push({
-        name: "serviceview",
+        name: "serviceqna",
+        // params: {
+        //   pgno: this.$route.params.pgno,
+        // },
+      });
+    },
+    moveModify() {
+      this.$router.push({
+        name: "serviceqnamodify",
         params: {
           articleno: this.article.articleNo,
           pgno: this.pgno,
           key: this.key,
           word: this.word,
-          move: true,
         },
       });
     },
-    modifyArticle() {
-      http.put("/notice/modify", this.article).then((data) => {
-        console.log(data);
-        this.$router.push({ name: "servicenotice" });
-      });
+    moveDelete() {
+      // console.log(this.article.articleno);
+      if (confirm("정말로 삭제하시겠습니까?")) {
+        http
+          .delete("/fqa/delete", {
+            params: {
+              articleno: this.article.articleNo,
+            },
+          })
+          .then((data) => {
+            console.log(data);
+            this.$router.push({ name: "serviceqna" });
+          });
+        // this.$router.go(-1);
+      }
     },
   },
+  computed: {
+    ...mapState(memberStore, ["userInfo"]),
+  },
   created() {
-    console.log(this.$route.params.articleno);
-    console.log(this.$route.params.pgno);
-    console.log(this.$route.params.key);
-    console.log(this.$route.params.word);
+    // 관리자 여부 파악
+    console.log("view!!!");
+    if (this.userInfo != null && this.userInfo.id == "admin") this.isAdmin = true;
+    else this.isAdmin = false;
     http
-      .get("/notice/modify", {
+      .get("/fqa/view", {
         params: {
           articleno: this.$route.params.articleno,
           pgno: this.$route.params.pgno,
@@ -85,11 +105,13 @@ export default {
         },
       })
       .then((data) => {
-        this.article = data.data.article;
+        this.article = data.data.notice;
         this.pgno = data.data.pgno;
         this.key = data.data.key;
         this.word = data.data.word;
+        console.log(this.article);
       });
+    // console.log("",)
   },
 };
 </script>
@@ -203,41 +225,15 @@ export default {
   opacity: 50%;
 }
 
-.view .view-content button {
+.view .view-content .move-list {
   width: 122px;
   height: 50px;
-  border: 1px solid #0a1151;
+  border: 0px;
   border-radius: 5px;
-  background-color: white;
-  color: #0a1151;
-  font-weight: bold;
-  font-size: 16px;
-}
-
-.view .view-content button:hover {
   background-color: #0a1151;
   color: white;
-  border: 0px;
-}
-
-.view .view-content textarea {
-  width: 100%;
-  height: 100%;
-}
-
-.view .modify-btn {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
-.view .modify-btn .cancel-modify {
-  justify-content: right;
-  margin-right: 10px;
-}
-
-.view .modify-btn .move-view {
-  justify-content: left;
-  margin-left: 10px;
+  font-weight: bold;
+  font-size: 16px;
+  margin: auto;
 }
 </style>

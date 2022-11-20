@@ -1,10 +1,10 @@
 <template>
   <main>
     <div class="view">
-      <div class="title">공지사항</div>
+      <div class="title">FQA</div>
       <div class="view-header">
         <div>
-          <div class="view-type">공지사항</div>
+          <div class="view-type">FQA</div>
           <input v-model="article.subject" class="view-title" />
         </div>
         <div>
@@ -39,7 +39,7 @@ import http from "@/api/http";
 // const memberStore = "memberStore";
 
 export default {
-  name: "ServiceModify",
+  name: "ServiceQnaModify",
   data() {
     return {
       article: null,
@@ -53,7 +53,7 @@ export default {
       console.log("moveView: ", this.article);
       // 글 상세보기로 이동
       this.$router.push({
-        name: "serviceview",
+        name: "serviceqnaview",
         params: {
           articleno: this.article.articleNo,
           pgno: this.pgno,
@@ -64,9 +64,9 @@ export default {
       });
     },
     modifyArticle() {
-      http.put("/notice/modify", this.article).then((data) => {
+      http.put("/fqa/modify", this.article).then((data) => {
         console.log(data);
-        this.$router.push({ name: "servicenotice" });
+        this.$router.push({ name: "serviceqna" });
       });
     },
   },
@@ -76,7 +76,7 @@ export default {
     console.log(this.$route.params.key);
     console.log(this.$route.params.word);
     http
-      .get("/notice/modify", {
+      .get("/fqa/modify", {
         params: {
           articleno: this.$route.params.articleno,
           pgno: this.$route.params.pgno,

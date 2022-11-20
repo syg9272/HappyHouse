@@ -13,111 +13,83 @@
           >
         </div>
         <div class="notice-search">
-          <input type="text" placeholder="제목을 입력하세요." />
+          <button @click="selectBtn()" class="select-button">
+            {{ key }}
+            <img :src="toggleImg" alt="toggle" />
+          </button>
+          <ul v-if="isSelected" class="select-option">
+            <li>
+              <button @click="changeKey">선택안함</button>
+            </li>
+            <li>
+              <button @click="changeKey">제목</button>
+            </li>
+            <li>
+              <button @click="changeKey">작성자</button>
+            </li>
+          </ul>
+          <input v-model="word" type="text" />
           <a href="#">
-            <img src="@/assets/img/search.png" alt="search" />
+            <img @click="searchList()" src="@/assets/img/search.png" alt="search" />
           </a>
         </div>
       </div>
       <div class="notice-area">
+        <div v-if="isAdmin" class="notice-write">
+          <button @click="writeNotice()" class="write-btn">글 작성</button>
+        </div>
         <div class="notice-list">
-          <div @click="moveView()" class="notice-item">
+          <div class="no-articles" v-if="!articles.length">등록된 QNA가 없습니다.</div>
+          <div
+            class="notice-item"
+            v-for="article in articles"
+            :key="article.articleNo"
+            :article="article"
+            @click="moveView(article.articleNo)"
+          >
             <div>
-              <div>1</div>
-              <div class="notice-type">FQA</div>
-              <div>[공지] 10월 21일 000 이벤트</div>
+              <div class="notice-articleNo">{{ article.articleNo }}</div>
+              <div class="notice-type">공지</div>
+              <div>[자주 묻는 질문] {{ article.subject }}</div>
             </div>
             <div>
               <a href="#">
-                <img class="file-img" src="@/assets/img/file.png" alt="file" />
+                <img
+                  v-if="article.fileInfos"
+                  class="file-img"
+                  src="@/assets/img/file.png"
+                  alt="file"
+                />
               </a>
-              <div>2022. 10. 21</div>
-            </div>
-          </div>
-          <div @click="moveView()" class="notice-item">
-            <div>
-              <div>1</div>
-              <div class="notice-type">FQA</div>
-              <div>[공지] 10월 21일 000 이벤트</div>
-            </div>
-            <div>
-              <a href="#">
-                <img class="file-img" src="@/assets/img/file.png" alt="file" />
-              </a>
-              <div>2022. 10. 21</div>
-            </div>
-          </div>
-          <div @click="moveView()" class="notice-item">
-            <div>
-              <div>1</div>
-              <div class="notice-type">FQA</div>
-              <div>[공지] 10월 21일 000 이벤트</div>
-            </div>
-            <div>
-              <a href="#">
-                <img class="file-img" src="@/assets/img/file.png" alt="file" />
-              </a>
-              <div>2022. 10. 21</div>
-            </div>
-          </div>
-          <div @click="moveView()" class="notice-item">
-            <div>
-              <div>1</div>
-              <div class="notice-type">FQA</div>
-              <div>[공지] 10월 21일 000 이벤트</div>
-            </div>
-            <div>
-              <a href="#">
-                <img class="file-img" src="@/assets/img/file.png" alt="file" />
-              </a>
-              <div>2022. 10. 21</div>
-            </div>
-          </div>
-          <div @click="moveView()" class="notice-item">
-            <div>
-              <div>1</div>
-              <div class="notice-type">FQA</div>
-              <div>[공지] 10월 21일 000 이벤트</div>
-            </div>
-            <div>
-              <a href="#">
-                <img class="file-img" src="@/assets/img/file.png" alt="file" />
-              </a>
-              <div>2022. 10. 21</div>
-            </div>
-          </div>
-          <div @click="moveView()" class="notice-item">
-            <div>
-              <div>1</div>
-              <div class="notice-type">FQA</div>
-              <div>[공지] 10월 21일 000 이벤트</div>
-            </div>
-            <div>
-              <a href="#">
-                <img class="file-img" src="@/assets/img/file.png" alt="file" />
-              </a>
-              <div>2022. 10. 21</div>
+              <div>{{ article.registerTime.substring(0, 10) }}</div>
             </div>
           </div>
         </div>
         <div class="pagenavigation">
           <div class="page">
-            <a href="#"><img src="@/assets/img/first.png" alt="first" /></a>
-            <a href="#"><img src="@/assets/img/before.png" alt="first" /></a>
+            <a @click.prevent="changePgno" class="page-link" data-pg="1"
+              ><img data-pg="1" src="@/assets/img/first.png" alt="first"
+            /></a>
+            <a @click.prevent="changePgno" class="page-link" :data-pg="prevPage"
+              ><img :data-pg="prevPage" src="@/assets/img/before.png" alt="prev"
+            /></a>
             <div>
-              <a href="#">1</a>
-              <a href="#">2</a>
-              <a href="#">3</a>
-              <a href="#">4</a>
-              <a href="#">5</a>
-              <a href="#">6</a>
-              <a href="#">7</a>
-              <a href="#">8</a>
-              <a href="#">9</a>
-              <a href="#">10</a>
+              <a
+                v-for="i in pageNum"
+                :key="i"
+                :pageNum="pageNum"
+                :data-pg="i"
+                class="page-link"
+                @click.prevent="changePgno"
+                >{{ i }}</a
+              >
             </div>
-            <a href="#"><img src="@/assets/img/next.png" alt="first" /></a>
-            <a href="#"><img src="@/assets/img/last.png" alt="first" /></a>
+            <a @click.prevent="changePgno" class="page-link" :data-pg="nextPage"
+              ><img :data-pg="nextPage" src="@/assets/img/next.png" alt="next"
+            /></a>
+            <a @click.prevent="changePgno" class="page-link" :data-pg="totalPageCount"
+              ><img :data-pg="totalPageCount" src="@/assets/img/last.png" alt="last"
+            /></a>
           </div>
         </div>
       </div>
@@ -126,24 +98,213 @@
 </template>
 
 <script>
-// import http from "@/api/http";
+import http from "@/api/http";
+import { mapState } from "vuex";
+
+const memberStore = "memberStore";
 
 export default {
-  name: "ServiceNotice",
+  name: "ServiceQna",
   data() {
     return {
-      //   navigator: null,
+      isAdmin: false,
+
+      key: "선택안함",
+      word: "",
+      pgno: 1,
+      articles: [],
+      isSelected: false,
+      toggleImg: null,
+
+      pageNum: [],
+      startPage: 1,
+      endPage: 1,
+      startRange: false,
+      endRange: false,
+      totalPageCount: 0,
+      pageNavigation: {},
+      prevPage: 1,
+      nextPage: 1,
     };
   },
   methods: {
-    moveView() {
-      this.$router.push({ name: "serviceview" });
+    writeNotice() {
+      this.$router.push({ name: "serviceqnawrite" });
     },
+    moveView(data) {
+      console.log("list pgno: ", this.pgno);
+      // 글 상세보기로 이동
+      var newKey = "";
+      if (this.key == "선택안함") newKey = "";
+      else if (this.key == "제목") newKey = "subject";
+      else newKey = "userid";
+      this.$router.push({
+        name: "serviceqnaview",
+        params: {
+          articleno: data,
+          pgno: this.pgno,
+          key: newKey,
+          word: this.word,
+          move: false,
+        },
+      });
+      // this.$router.go(0);
+    },
+    selectBtn() {
+      // 검색조건 선택할 경우 가려져있던 option창 보여주기
+      this.isSelected = !this.isSelected;
+      if (this.isSelected) this.toggleImg = require("../../assets/img/toggle-close.png");
+      else {
+        this.toggleImg = require("../../assets/img/toggle-open.png");
+      }
+    },
+    changePgno(event) {
+      // 페이지 바꿀 때마다 공지사항 목록 받아오기
+      this.pgno = event.target.getAttribute("data-pg");
+      // 바뀐 페이지 태그 색상 변경
+      var arr = document.getElementsByClassName("page-link");
+      console.log("arr : ", this.pgno);
+      Array.from(arr).forEach((element) => {
+        if (element.getAttribute("data-pg") == this.pgno) {
+          element.style.color = "#0a1151";
+          console.log("element : ", element);
+        } else {
+          element.style.color = "#b4b4b4";
+        }
+      });
+      http
+        .get("/fqa/list", {
+          params: {
+            key: "",
+            word: "",
+            pgno: event.target.getAttribute("data-pg"),
+          },
+        })
+        .then((data) => {
+          this.articles = data.data.articles;
+          this.pageNum = [];
+          this.startPage = data.data.startPage;
+          this.startRange = data.data.startRange;
+          this.endPage = data.data.endPage;
+          this.endRange = data.data.endRange;
+          this.totalPageCount = data.data.totalPageCount;
+
+          if (this.startRange) this.prevPage = 1;
+          else this.prevPage = this.startPage - 1;
+
+          if (this.endRange) this.nextPage = this.endPage;
+          else this.nextPage = this.endPage + 1;
+
+          for (var i = this.startPage; i <= this.endPage; i++) {
+            this.pageNum.push(i);
+            // console.log(i);
+          }
+        });
+    },
+    changeKey(event) {
+      // select option창 열고 닫기
+      this.isSelected = !this.isSelected;
+      // select창에 선택된 option 표시
+      this.key = event.target.innerText;
+      // 토글 이미지 변경
+      this.toggleImg = require("../../assets/img/toggle-open.png");
+    },
+    searchList() {
+      // 검색결과 공지사항 목록 받아오기
+      var newKey = "";
+      if (this.key == "선택안함") newKey = "";
+      else if (this.key == "제목") newKey = "subject";
+      else newKey = "userid";
+      http
+        .get("/fqa/list", {
+          params: {
+            key: newKey,
+            word: this.word,
+            pgno: 1,
+          },
+        })
+        .then((data) => {
+          this.articles = data.data.articles;
+          this.key = "선택안함";
+          this.word = "";
+
+          // 페이징 관련 데이터
+          this.pageNum = [];
+          this.startPage = data.data.startPage;
+          this.startRange = data.data.startRange;
+          this.endPage = data.data.endPage;
+          this.endRange = data.data.endRange;
+          this.totalPageCount = data.data.totalPageCount;
+
+          if (this.startRange) this.prevPage = 1;
+          else this.prevPage = this.startPage - 1;
+
+          if (this.endRange) this.nextPage = this.endPage;
+          else this.nextPage = this.endPage + 1;
+
+          for (var i = this.startPage; i <= this.endPage; i++) {
+            this.pageNum.push(i);
+          }
+        });
+      this.toggleImg = require("../../assets/img/toggle-open.png");
+    },
+  },
+  computed: {
+    ...mapState(memberStore, ["userInfo"]),
+  },
+  created() {
+    // 관리자 여부 파악
+    if (this.userInfo != null && this.userInfo.id == "admin") this.isAdmin = true;
+    else this.isAdmin = false;
+    http
+      .get("/fqa/list", {
+        params: {
+          key: this.key == "선택안함" ? "" : this.key,
+          word: this.word,
+          // pgno: this.$route.params.pgno,
+          pgno: this.pgno,
+        },
+      })
+      .then((data) => {
+        this.articles = data.data.articles;
+        this.navigator = data.data.navigator;
+        this.key = "선택안함";
+        this.word = "";
+
+        // 페이징 관련 데이터
+        this.startPage = data.data.startPage;
+        this.startRange = data.data.startRange;
+        this.endPage = data.data.endPage;
+        this.endRange = data.data.endRange;
+        this.totalPageCount = data.data.totalPageCount;
+
+        if (this.startRange) this.prevPage = 1;
+        else this.prevPage = this.startPage - 1;
+
+        if (this.endRange) this.nextPage = this.endPage;
+        else this.nextPage = this.endPage + 1;
+
+        for (var i = this.startPage; i <= this.endPage; i++) {
+          this.pageNum.push(i);
+        }
+      });
+    this.toggleImg = require("../../assets/img/toggle-open.png");
+  },
+  updated() {
+    // 현재 페이지 태그 색상 변경
+    var arr = document.getElementsByClassName("page-link");
+    Array.from(arr).forEach((element) => {
+      if (element.getAttribute("data-pg") == this.pgno) {
+        element.style.color = "#0a1151";
+      } else {
+        element.style.color = "#b4b4b4";
+      }
+    });
   },
 };
 </script>
 
-<style scoped>
+<style>
 /* notice css */
 .notice {
   position: absolute;
@@ -151,8 +312,14 @@ export default {
   height: 86%;
 }
 
+.notice .no-articles {
+  font-size: 20px;
+  margin: auto;
+  text-align: center;
+}
+
 .notice .notice-nav {
-  padding: 0 150px;
+  padding: 0 280px 0 430px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -223,7 +390,6 @@ export default {
 }
 
 .notice .select-option {
-  /* display: none; */
   z-index: 9999;
   width: 100px;
   position: absolute;
@@ -254,20 +420,49 @@ export default {
 .notice .notice-area {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
   background-color: rgba(10, 17, 81, 0.1);
   height: 88%;
   width: 100%;
   padding: 50px 0 50px 0;
 }
 
+.notice .notice-write {
+  display: flex;
+  flex-direction: column;
+  justify-content: right;
+  width: 55%;
+  margin: auto;
+}
+
+.notice .write-btn {
+  margin-left: 90%;
+  width: 80px;
+  height: 30px;
+  border-radius: 10px;
+  border: 0px;
+  background-color: #0a1151;
+  color: white;
+  cursor: pointer;
+}
+
+.notice .notice-list {
+  height: 540px;
+}
+
 .notice .notice-list .notice-item {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   margin: auto;
-  width: 65%;
+  width: 55%;
   font-size: 14px;
+  cursor: pointer;
+}
+
+.notice .notice-list .notice-articleNo {
+  width: 27px;
+  text-align: right;
 }
 
 .notice .notice-list .notice-item:hover {
@@ -278,15 +473,11 @@ export default {
 .notice .notice-list .notice-item > div {
   display: flex;
   flex-direction: row;
-  margin: 15px 50px;
+  margin: 15px 0;
 }
 
 .notice .notice-list .notice-item > div > * {
   margin: 0 30px;
-}
-
-.notice .notice-list .notice-item a {
-  margin-left: 200px;
 }
 
 .notice .notice-list .notice-item > div .file-img {
@@ -305,37 +496,33 @@ export default {
   font-size: 12px;
 }
 
-/* .notice .notice-list .page {
-  margin-top: 40px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-} */
-
 .notice .pagenavigation {
-  /* position: fixed; */
-  /* bottom: 100px; */
-  /* left: 750px; */
-  /* margin: 0 auto; */
   display: flex;
   flex-direction: row;
   justify-content: center;
+  z-index: 99;
 }
 
 .notice .pagenavigation .page {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  cursor: pointer;
 }
 
-.notice .page a {
+.page-link {
   margin: 0 10px;
   color: #b4b4b4;
   font-size: 16px;
   font-weight: bold;
 }
 
-.notice .notice-list .page div a:hover {
+.page-link:hover {
   color: #0a1151;
+  cursor: pointer;
+}
+
+.active {
+  color: #0a1151 !important;
 }
 </style>

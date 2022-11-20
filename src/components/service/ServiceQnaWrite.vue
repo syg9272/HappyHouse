@@ -1,15 +1,15 @@
 <template>
   <main>
     <div class="view">
-      <div class="title">공지사항</div>
+      <div class="title">FQA</div>
       <div class="view-header">
         <div>
-          <div class="view-type">공지사항</div>
+          <div class="view-type">FQA</div>
           <input v-model="article.subject" class="view-title" />
         </div>
         <div>
-          <div class="view-hit">조회수 : {{ article.hit }}</div>
-          <div>{{ article.registerTime.substring(0, 10) }}</div>
+          <!-- <div class="view-hit">조회수 : {{ article.hit }}</div> -->
+          <!-- <div>{{ article.registerTime.substring(0, 10) }}</div> -->
         </div>
       </div>
       <div class="view-content">
@@ -17,15 +17,17 @@
           <textarea v-model="article.content" />
         </div>
         <div class="view-file">
-          <div>첨부파일 ({{ article.fileInfos.legth }})</div>
+          <div>첨부파일 ({{ article.fileInfos.length }})</div>
           <div class="file-list">
-            <a href="#"><input value="파일" type="file" /></a>
-            <a href="#">10월 21일 1.6 버전 업데이트 별첨.pdf</a>
+            <a href="#"
+              ><input value="파일" type="file" @change="changeFile" multiple="multiple"
+            /></a>
+            <!-- <a href="#">10월 21일 1.6 버전 업데이트 별첨.pdf</a> -->
           </div>
         </div>
         <div class="modify-btn">
-          <button @click="moveView()" class="cancel-modify">취소</button>
-          <button @click="modifyArticle()" class="move-view">수정</button>
+          <button @click="moveList()" class="cancel-modify">취소</button>
+          <button @click="registArticle()" class="move-view">등록</button>
         </div>
       </div>
     </div>
@@ -39,58 +41,34 @@ import http from "@/api/http";
 // const memberStore = "memberStore";
 
 export default {
-  name: "ServiceModify",
+  name: "ServiceQnaWrite",
   data() {
     return {
-      article: null,
-      pgno: null,
-      key: null,
-      word: null,
+      article: {
+        id: "admin",
+        subject: null,
+        content: null,
+        fileInfos: [],
+      },
     };
   },
   methods: {
-    moveView() {
-      console.log("moveView: ", this.article);
-      // 글 상세보기로 이동
-      this.$router.push({
-        name: "serviceview",
-        params: {
-          articleno: this.article.articleNo,
-          pgno: this.pgno,
-          key: this.key,
-          word: this.word,
-          move: true,
-        },
-      });
+    moveList() {
+      this.$router.push({ name: "serviceqna" });
     },
-    modifyArticle() {
-      http.put("/notice/modify", this.article).then((data) => {
+    registArticle() {
+      console.log(this.article);
+      http.post("/fqa/register", this.article).then((data) => {
         console.log(data);
-        this.$router.push({ name: "servicenotice" });
+        this.$router.push({ name: "serviceqna" });
       });
     },
+    changeFile(e) {
+      console.log(e.target.files);
+      this.article.fileInfos = e.target.files;
+    },
   },
-  created() {
-    console.log(this.$route.params.articleno);
-    console.log(this.$route.params.pgno);
-    console.log(this.$route.params.key);
-    console.log(this.$route.params.word);
-    http
-      .get("/notice/modify", {
-        params: {
-          articleno: this.$route.params.articleno,
-          pgno: this.$route.params.pgno,
-          key: this.$route.params.key,
-          word: this.$route.params.word,
-        },
-      })
-      .then((data) => {
-        this.article = data.data.article;
-        this.pgno = data.data.pgno;
-        this.key = data.data.key;
-        this.word = data.data.word;
-      });
-  },
+  created() {},
 };
 </script>
 
