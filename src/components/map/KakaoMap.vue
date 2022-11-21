@@ -1,5 +1,11 @@
 <template>
   <main>
+    <!-- <div class="black-bg">
+      <div class="white-bg">
+        <h4>상세페이지</h4>
+        <p>상세페이지내용임</p>
+      </div>
+    </div> -->
     <div class="map" id="map">
       <input
         @input="findLocation"
@@ -26,29 +32,7 @@
           >
           <label class="location-name">{{ apt.sidoName + apt.gugunName + apt.dong }}</label>
         </div>
-        <!-- <div>
-          <img src="@/assets/img/mark.png" alt="mark" />
-          <label>흥덕구 <b>봉명동</b></label>
-          <label class="location-name">충청북도 청주시</label>
-        </div>
-        <div>
-          <img src="@/assets/img/mark.png" alt="mark" />
-          <label>흥덕구 <b>봉명동</b></label>
-          <label class="location-name">충청북도 청주시</label>
-        </div>
-        <div>
-          <img src="@/assets/img/mark.png" alt="mark" />
-          <label>흥덕구 <b>봉명동</b></label>
-          <label class="location-name">충청북도 청주시</label>
-        </div>
-        <div>
-          <img src="@/assets/img/mark.png" alt="mark" />
-          <label>흥덕구 <b>봉명동</b></label>
-          <label class="location-name">충청북도 청주시</label>
-        </div> -->
       </div>
-      <!-- <div>
-  </div> -->
     </div>
     <map-side v-if="isSide" :isSide="isSide" :apt="apt"></map-side>
   </main>
@@ -254,6 +238,7 @@ export default {
           this.apt = this.markerPositions[i];
           console.log(this.apt);
           this.isSide = !this.isSide;
+          // http.post("/apt/")
         });
         // window.kakao.maps.event.addListener(this.marker, "click", () => {
         //   console.log(this.marker);
@@ -488,25 +473,12 @@ export default {
 </script>
 
 <style scoped>
-/* #map {
-  width: 100%;
-  height: 500px;
-  border: 1px #a8a8a8 solid;
-} */
-
 main .map {
-  /* background-image: url("https://s3-alpha-sig.figma.com/img/8393/7f4b/ea706076cd76503e7219376269e4062a?Expires=1668988800&Signature=etJY9NAIbEXSYkFN-EZnnUxEoEcbXJUVNvZiMhe5bKbbP6PTam2-kyJuSvUseAIULwbRSkvfVPi1EWtdacHYBIWfm~8-YH-Wp13it9YN77cuMGylAa-w1bPvPC0ltOfzcOHBwEkrQrTu-CotTJM0DIJTjhA490VmaWdJwAMKdLSBmMfTkvAh8xxS6e4qr8iR~7bn9-fYtAs4byS~ua2HeTXCLkPKV8eG6AvAQ-SKbG~W1m6vy12wAsTxgt~N4zDzusYVKy-e7VzM0oBQMrHmrv4pvVFSxsFFA5HyU5l4Yehx-4kvElY8hq6l0udQ~m218dCH9wOU3I6s5UyqIrldfw__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA"); */
   position: absolute;
   overflow: hidden;
   width: 100%;
   height: 86%;
-  /* background-color: blanchedalmond; */
 }
-
-/* main div:focus-visible ~ .map-search {
-  visibility: hidden;
-  z-index: 3;
-} */
 
 main .map .search-img {
   position: relative;
@@ -517,10 +489,6 @@ main .map .search-img {
 }
 
 main .map .location-search {
-  /* background-image: url("@/assets/img/search.png");
-  background-position: 410px;
-  background-repeat: no-repeat; */
-  /* back */
   cursor: pointer;
   padding: 0 30px;
   width: 457px;
@@ -593,5 +561,20 @@ main .map img {
   width: 22px;
   height: 22px;
   cursor: pointer;
+}
+
+/* 모달창 */
+.black-bg {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  padding: 20px;
+}
+.white-bg {
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
 }
 </style>

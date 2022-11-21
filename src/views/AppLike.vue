@@ -3,16 +3,22 @@
     <div class="like">
       <div class="title">관심목록</div>
       <div class="like-list">
-        <div class="like-item">
+        <div v-for="item in likeList" :key="item" :likelist="likeList" class="like-item">
           <img src="@/assets/img/apt1.png" alt="apt" />
           <div>
             <div class="apt-title">
-              <div class="apt-name">000 아파트</div>
-              <img @click="removeLike()" src="@/assets/img/like-select.png" alt="like" />
+              <div class="apt-name">{{ item.apartmentName }}</div>
+              <img
+                @click="deleteLike(item.aptCode)"
+                src="@/assets/img/like-select.png"
+                alt="like"
+              />
             </div>
             <div>
               <img class="apt-like-icon" src="@/assets/img/apt-icon.png" alt="apt-info" />
-              <div>부산광역시 중구 영주동 92</div>
+              <div>
+                {{ item.sidoName + " " + item.gugunName + "" + item.dong + " " + item.jibun }}
+              </div>
             </div>
             <div>
               <a @click.prevent="moveApt()"
@@ -22,7 +28,7 @@
             </div>
           </div>
         </div>
-        <div class="like-item">
+        <!-- <div class="like-item">
           <img src="@/assets/img/apt2.jpg" alt="apt" />
           <div>
             <div class="apt-title">
@@ -173,13 +179,18 @@
               >
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </main>
 </template>
 
 <script>
+import http from "@/api/http";
+import { mapState } from "vuex";
+
+const memberStore = "memberStore";
+
 export default {
   name: "AppLike",
   data() {
@@ -187,16 +198,37 @@ export default {
       likeList: [],
     };
   },
+  computed: {
+    ...mapState(memberStore, ["userInfo"]),
+  },
   methods: {
-    removeLike() {
+    deleteLike(data) {
       if (confirm("관심목록에서 제외하시겠습니까?")) {
-        console.log("remove");
-      } else {
-        console.log("cancel");
+        http
+          .delete("/apt/deleteLikeApt", {
+            params: {
+              id: this.userInfo.id,
+              aptCode: data,
+            },
+          })
+          .then((data) => {
+            console.log(data);
+          });
       }
-      // 이미지 바꾸기
-      // 삭제하기
+      this.$router.go(0);
     },
+  },
+  created() {
+    http
+      .get("/apt/seleteLikeApt", {
+        params: {
+          id: this.userInfo.id,
+        },
+      })
+      .then((data) => {
+        this.likeList = data.data;
+        console.log(this.likeList);
+      });
   },
 };
 </script>

@@ -45,6 +45,7 @@ const routes = [
   {
     path: "/map",
     name: "map",
+    beforeEnter: onlyAuthUser,
     component: AppMap,
   },
   {

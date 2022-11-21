@@ -9,7 +9,20 @@
     <div class="detail-info">
       <div class="detail-title">
         <div>{{ apt.apartmentName }}</div>
-        <img class="heart" src="@/assets/img/like-select.png" alt="like" />
+        <img
+          v-if="!isLike"
+          @click="insertLike()"
+          class="heart"
+          src="@/assets/img/like.png"
+          alt="like"
+        />
+        <img
+          v-else
+          @click="deleteLike()"
+          class="heart"
+          src="@/assets/img/like-select.png"
+          alt="like"
+        />
       </div>
       <div class="apt-info">
         <table class="apt-info-table">
@@ -37,7 +50,7 @@
           </tr>
           <tr>
             <th>건축 년도</th>
-            <td>{{ deal[0].buildYear }}</td>
+            <td>{{ deal[0].buildYear }} 년도</td>
           </tr>
         </table>
       </div>
@@ -51,28 +64,18 @@
           </thead>
           <tbody>
             <tr v-for="item in deal" :key="item" :deal="deal">
-              <td>{{ deal }}</td>
-              <td>18,300만원</td>
-              <td>73.56㎡</td>
-              <td>4층</td>
-            </tr>
-            <tr>
-              <td>2022-01-18</td>
-              <td>18,300만원</td>
-              <td>73.56㎡</td>
-              <td>4층</td>
-            </tr>
-            <tr>
-              <td>2022-01-18</td>
-              <td>18,300만원</td>
-              <td>73.56㎡</td>
-              <td>4층</td>
-            </tr>
-            <tr>
-              <td>2022-01-18</td>
-              <td>18,300만원</td>
-              <td>73.56㎡</td>
-              <td>4층</td>
+              <td>
+                {{
+                  item.dealYear +
+                  "-" +
+                  (item.dealMonth < 10 ? "0" + item.dealMonth : item.dealMonth) +
+                  "-" +
+                  (item.dealDay < 10 ? "0" + item.dealDay : item.dealDay)
+                }}
+              </td>
+              <td>{{ item.dealAmount }} 만원</td>
+              <td>{{ item.area }} 평</td>
+              <td>{{ item.floor }} 층</td>
             </tr>
           </tbody>
         </table>
@@ -106,6 +109,9 @@
 
 <script>
 import http from "@/api/http";
+import { mapState } from "vuex";
+
+const memberStore = "memberStore";
 
 export default {
   name: "MapSide",
@@ -116,19 +122,54 @@ export default {
   data() {
     return {
       side: this.isSide,
+      aptInfo: null,
       deal: null,
+      isLike: false,
     };
+  },
+  computed: {
+    ...mapState(memberStore, ["userInfo"]),
   },
   methods: {
     closeSide() {
       this.side = !this.side;
       this.$emit("updateParent");
     },
+    insertLike() {
+      if (confirm("관심목록에 추가하시겠습니까?")) {
+        this.isLike = true;
+        this.aptInfo.id = this.userInfo.id;
+        http.post("/apt/insertLikeApt", this.aptInfo).then((data) => {
+          console.log(data);
+        });
+      }
+    },
+    deleteLike() {
+      if (confirm("관심목록에서 제외하시겠습니까?")) {
+        this.isLike = false;
+        http
+          .delete("/apt/deleteLikeApt", {
+            params: {
+              id: this.userInfo.id,
+              aptCode: this.aptInfo.aptCode,
+            },
+          })
+          .then((data) => {
+            console.log(data);
+          });
+      }
+    },
   },
   created() {
-    http.post("/apt/detailAptList", this.apt).then((data) => {
+    // console.log(this.apt);
+    this.aptInfo = this.apt;
+    this.aptInfo.id = this.userInfo.id;
+    // this.apt["id"] = this.userInfo.id;
+    http.post("/apt/detailAptList", this.aptInfo).then((data) => {
       console.log(data.data);
+      this.isLike = data.data.like;
       this.deal = data.data.list;
+      this.aptInfo = data.data.list[0];
       console.log(this.deal);
     });
   },
@@ -190,17 +231,20 @@ export default {
 .side-bar .detail-info .heart {
   width: 27px;
   height: 27px;
+  cursor: pointer;
 }
 
 .side-bar .detail-info .apt-info {
   border-bottom: 0.3px solid rgba(0, 0, 0, 0.274);
   overflow: auto;
-  min-height: 100px;
+  /* max-height: 230px; */
 }
 
 .side-bar .detail-info .apt-info-table {
   padding: 10px 10px 10px 20px;
   white-space: nowrap;
+  /* max-height: 230px; */
+  /* overflow: auto; */
 }
 
 .side-bar .detail-info .apt-info-table th {
@@ -224,6 +268,8 @@ export default {
 .side-bar .detail-info .deal-table {
   padding: 20px;
   border-bottom: 0.3px solid rgba(0, 0, 0, 0.274);
+  max-height: 280px;
+  overflow: auto;
 }
 
 .side-bar .detail-info .deal-table table {
