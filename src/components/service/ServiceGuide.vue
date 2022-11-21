@@ -8,84 +8,26 @@
             >공지사항</router-link
           >
           <router-link :to="{ name: 'serviceqna' }" class="menu service-qna-list">FQA</router-link>
-          <router-link :to="{ name: 'serviceguide' }" class="menu service-guide-list"
+          <router-link :to="{ name: 'serviceguide' }" class="menu service-now"
             >이용안내</router-link
           >
         </div>
-        <div class="notice-search">
-          <button @click="selectBtn()" class="select-button">
-            {{ key }}
-            <img :src="toggleImg" alt="toggle" />
-          </button>
-          <ul v-if="isSelected" class="select-option">
-            <li>
-              <button @click="changeKey">선택안함</button>
-            </li>
-            <li>
-              <button @click="changeKey">제목</button>
-            </li>
-            <li>
-              <button @click="changeKey">작성자</button>
-            </li>
-          </ul>
-          <input v-model="word" type="text" />
-          <a href="#">
-            <img @click="searchList()" src="@/assets/img/search.png" alt="search" />
-          </a>
-        </div>
       </div>
-      <div class="notice-area">
-        <div class="notice-list">
-          <div class="no-articles" v-if="!articles.length">등록된 공지사항이 없습니다.</div>
-          <div
-            class="notice-item"
-            v-for="article in articles"
-            :key="article.articleNo"
-            :article="article"
-          >
-            <div>
-              <div class="notice-articleNo">{{ article.articleNo }}</div>
-              <div class="notice-type">공지</div>
-              <div>[공지] {{ article.subject }}</div>
-            </div>
-            <div>
-              <a href="#">
-                <img
-                  v-if="article.fileInfos"
-                  class="file-img"
-                  src="@/assets/img/file.png"
-                  alt="file"
-                />
-              </a>
-              <div>{{ article.registerTime.substring(0, 10) }}</div>
-            </div>
+      <div class="guide-area">
+        <div class="guide-top">
+          <div class="guide-title">부동산 조회의 시작과 끝! ‘HAPPY HOUSE’</div>
+          <div class="guide-content">
+            `HAPPY HOUSE`는 공공 데이터 포탈의 빅데이터를 통해 전국 아파트 부동산 유형별 실거래가
+            위치 정보 제공은 물론
+            <br />
+            검색, 관심목록 등 다양한 정보를 제공하고 있는 '종합 부동산 플랫폼'입니다.
           </div>
         </div>
-        <div class="pagenavigation">
-          <div class="page">
-            <a @click.prevent="changePgno" class="page-link" data-pg="1"
-              ><img data-pg="1" src="@/assets/img/first.png" alt="first"
-            /></a>
-            <a @click.prevent="changePgno" class="page-link" :data-pg="prevPage"
-              ><img :data-pg="prevPage" src="@/assets/img/before.png" alt="prev"
-            /></a>
-            <div>
-              <a
-                v-for="i in pageNum"
-                :key="i"
-                :pageNum="pageNum"
-                :data-pg="i"
-                class="page-link"
-                @click.prevent="changePgno"
-                >{{ i }}</a
-              >
-            </div>
-            <a @click.prevent="changePgno" class="page-link" :data-pg="nextPage"
-              ><img :data-pg="nextPage" src="@/assets/img/next.png" alt="next"
-            /></a>
-            <a @click.prevent="changePgno" class="page-link" :data-pg="totalPageCount"
-              ><img :data-pg="totalPageCount" src="@/assets/img/last.png" alt="last"
-            /></a>
+        <div class="guide-list">
+          <div class="guide-menu">실거래가 조회</div>
+          <div>
+            <img class="guide-img" :src="guideImg" alt="guide-1" />
+            <img class="guide-map-img" :src="mapImg" alt="map" />
           </div>
         </div>
       </div>
@@ -94,178 +36,15 @@
 </template>
 
 <script>
-import http from "@/api/http";
+// import http from "@/api/http";
 
 export default {
-  name: "ServiceNotice",
+  name: "ServiceGuide",
   data() {
     return {
-      key: "선택안함",
-      word: "",
-      pgno: 1,
-      articles: [],
-      isSelected: false,
-      toggleImg: null,
-
-      pageNum: [],
-      startPage: 1,
-      endPage: 1,
-      startRange: false,
-      endRange: false,
-      totalPageCount: 0,
-      pageNavigation: {},
-      prevPage: 1,
-      nextPage: 1,
+      guideImg: require("../../assets/img/guide-1.png"),
+      mapImg: require("../../assets/img/map.png"),
     };
-  },
-  methods: {
-    moveView() {
-      // 글 상세보기로 이동
-      this.$router.push({ name: "serviceview" });
-    },
-    selectBtn() {
-      // 검색조건 선택할 경우 가려져있던 option창 보여주기
-      this.isSelected = !this.isSelected;
-      if (this.isSelected) this.toggleImg = require("../../assets/img/toggle-close.png");
-      else {
-        this.toggleImg = require("../../assets/img/toggle-open.png");
-      }
-    },
-    changePgno(event) {
-      // 페이지 바꿀 때마다 공지사항 목록 받아오기
-      this.pgno = event.target.getAttribute("data-pg");
-      // 바뀐 페이지 태그 색상 변경
-      var arr = document.getElementsByClassName("page-link");
-      console.log("arr : ", this.pgno);
-      Array.from(arr).forEach((element) => {
-        if (element.getAttribute("data-pg") == this.pgno) {
-          element.style.color = "#0a1151";
-          console.log("element : ", element);
-        } else {
-          element.style.color = "#b4b4b4";
-        }
-      });
-      http
-        .get("/notice/list", {
-          params: {
-            key: "",
-            word: "",
-            pgno: event.target.getAttribute("data-pg"),
-          },
-        })
-        .then((data) => {
-          this.articles = data.data.articles;
-          this.pageNum = [];
-          this.startPage = data.data.startPage;
-          this.startRange = data.data.startRange;
-          this.endPage = data.data.endPage;
-          this.endRange = data.data.endRange;
-          this.totalPageCount = data.data.totalPageCount;
-
-          if (this.startRange) this.prevPage = 1;
-          else this.prevPage = this.startPage - 1;
-
-          if (this.endRange) this.nextPage = this.endPage;
-          else this.nextPage = this.endPage + 1;
-
-          for (var i = this.startPage; i <= this.endPage; i++) {
-            this.pageNum.push(i);
-            // console.log(i);
-          }
-        });
-    },
-    changeKey(event) {
-      // select option창 열고 닫기
-      this.isSelected = !this.isSelected;
-      // select창에 선택된 option 표시
-      this.key = event.target.innerText;
-      // 토글 이미지 변경
-      this.toggleImg = require("../../assets/img/toggle-open.png");
-    },
-    searchList() {
-      // 검색결과 공지사항 목록 받아오기
-      var newKey = "";
-      if (this.key == "선택안함") newKey = "";
-      else if (this.key == "제목") newKey = "subject";
-      else newKey = "userid";
-      http
-        .get("/notice/list", {
-          params: {
-            key: newKey,
-            word: this.word,
-            pgno: 1,
-          },
-        })
-        .then((data) => {
-          this.articles = data.data.articles;
-          this.key = "선택안함";
-          this.word = "";
-
-          // 페이징 관련 데이터
-          this.pageNum = [];
-          this.startPage = data.data.startPage;
-          this.startRange = data.data.startRange;
-          this.endPage = data.data.endPage;
-          this.endRange = data.data.endRange;
-          this.totalPageCount = data.data.totalPageCount;
-
-          if (this.startRange) this.prevPage = 1;
-          else this.prevPage = this.startPage - 1;
-
-          if (this.endRange) this.nextPage = this.endPage;
-          else this.nextPage = this.endPage + 1;
-
-          for (var i = this.startPage; i <= this.endPage; i++) {
-            this.pageNum.push(i);
-          }
-        });
-      this.toggleImg = require("../../assets/img/toggle-open.png");
-    },
-  },
-  created() {
-    http
-      .get("/notice/list", {
-        params: {
-          key: this.key == "선택안함" ? "" : this.key,
-          word: this.word,
-          pgno: this.pgno,
-        },
-      })
-      .then((data) => {
-        this.articles = data.data.articles;
-        this.navigator = data.data.navigator;
-        this.key = "선택안함";
-        this.word = "";
-
-        // 페이징 관련 데이터
-        this.startPage = data.data.startPage;
-        this.startRange = data.data.startRange;
-        this.endPage = data.data.endPage;
-        this.endRange = data.data.endRange;
-        this.totalPageCount = data.data.totalPageCount;
-
-        if (this.startRange) this.prevPage = 1;
-        else this.prevPage = this.startPage - 1;
-
-        if (this.endRange) this.nextPage = this.endPage;
-        else this.nextPage = this.endPage + 1;
-
-        for (var i = this.startPage; i <= this.endPage; i++) {
-          this.pageNum.push(i);
-        }
-      });
-    this.toggleImg = require("../../assets/img/toggle-open.png");
-  },
-  updated() {
-    // 현재 페이지 태그 색상 변경
-    var arr = document.getElementsByClassName("page-link");
-    Array.from(arr).forEach((element) => {
-      if (element.getAttribute("data-pg") == this.pgno) {
-        element.style.color = "#0a1151";
-      } else {
-        element.style.color = "#b4b4b4";
-      }
-    });
   },
 };
 </script>
@@ -306,171 +85,79 @@ export default {
   border-bottom: 3px solid white;
 }
 
-.notice .notice-nav .notice-menu .service-notice-list {
+.notice .notice-nav .notice-menu .service-now {
   color: #0a1151;
   font-weight: bold;
   border-bottom: 3px solid #0a1151;
-  /* z-index: 999; */
 }
 
 /* active 속성 추가 */
 .notice .notice-nav .notice-menu .menu:hover {
   color: black;
-  /* z-index: 999; */
-}
-
-.notice .notice-nav .notice-search {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.notice .notice-nav .notice-search .select-button,
-.notice .notice-nav .notice-search input {
-  padding: 5px;
-  margin: 0 5px;
-  border: 0.3px solid rgba(0, 0, 0, 0.25);
-  border-radius: 20px;
-  outline: none;
-}
-
-.notice .notice-nav .notice-search input {
-  padding: 5px 15px;
-}
-
-.notice .notice-nav .notice-search .select-button {
-  width: 100px;
-  background-color: white;
-}
-
-.notice .notice-nav .notice-search .select-button img {
-  width: 10px;
-  height: 10px;
-  margin-left: 10px;
-}
-
-.notice .notice-nav .notice-search > a > img {
-  margin-left: 10px;
-  cursor: pointer;
-}
-
-.notice .select-option {
-  /* display: none; */
-  z-index: 9999;
-  width: 100px;
-  position: absolute;
-  top: 45px;
-  left: 6px;
-  border: 0.3px solid rgba(0, 0, 0, 0.25);
-  border-radius: 10px;
-  background-color: white;
-}
-
-.notice .select-option button {
-  background-color: white;
-  width: 88px;
-  text-align: left;
-  padding: 5px;
-  border: 0px;
-  margin: 5px;
-  color: rgba(0, 0, 0, 0.5);
-}
-
-.notice .select-option button:hover {
-  background-color: rgba(10, 17, 81, 0.1);
-  font-weight: 500;
-  color: #0a1151;
 }
 
 /* notice item list */
-.notice .notice-area {
+.notice .guide-area {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  /* justify-content: space-around; */
+  align-items: center;
   background-color: rgba(10, 17, 81, 0.1);
-  height: 88%;
+  min-height: 88%;
   width: 100%;
   padding: 50px 0 50px 0;
 }
 
-.notice .notice-list {
-  height: 540px;
-}
-
-.notice .notice-list .notice-item {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin: auto;
+.notice .guide-area .guide-top {
+  background-color: white;
   width: 55%;
-  font-size: 14px;
-  cursor: pointer;
+  /* height: 110px; */
+  border: 0.3px solid rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  padding: 20px 40px;
+  margin-bottom: 50px;
 }
 
-.notice .notice-list .notice-articleNo {
-  width: 27px;
-  text-align: right;
-}
-
-.notice .notice-list .notice-item:hover {
-  background-color: white;
-  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.25);
-}
-
-.notice .notice-list .notice-item > div {
-  display: flex;
-  flex-direction: row;
-  margin: 15px 0;
-}
-
-.notice .notice-list .notice-item > div > * {
-  margin: 0 30px;
-}
-
-.notice .notice-list .notice-item > div .file-img {
-  width: 22px;
-  height: 22px;
-  margin-left: 200px;
-}
-
-.notice .notice-list .notice-item .notice-type {
-  background-color: white;
-  border: 0.5px solid rgba(0, 0, 0, 0.25);
-  border-radius: 20px;
-  width: 60px;
-  text-align: center;
-  line-height: 22px;
-  font-size: 12px;
-}
-
-.notice .pagenavigation {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  z-index: 99;
-}
-
-.notice .pagenavigation .page {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.page-link {
-  margin: 0 10px;
-  color: #b4b4b4;
-  font-size: 16px;
+.notice .guide-area .guide-top .guide-title {
+  font-size: 15px;
   font-weight: bold;
+  color: black;
+  margin-bottom: 10px;
 }
 
-.page-link:hover {
-  color: #0a1151;
-  cursor: pointer;
+.notice .guide-area .guide-top .guide-content {
+  font-size: 14px;
+  font-weight: normal;
+  color: #7a7a7a;
 }
 
-.active {
-  color: #0a1151 !important;
+.notice .guide-area .guide-list {
+  display: flex;
+  flex-direction: column;
+  /* text-align: left; */
+  /* justify-content: center; */
+  /* align-items: center; */
+  width: 55%;
+}
+
+.notice .guide-area .guide-menu {
+  font-size: 20px;
+  font-weight: bold;
+  color: #2475d0;
+  padding-bottom: 30px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.notice .guide-area .guide-img {
+  display: flex;
+  flex-direction: column;
+  z-index: 999;
+  margin: 30px auto;
+}
+
+.notice .guide-area .guide-map-img {
+  width: 100%;
+  object-fit: cover;
+  margin: 20px 0 50px 0;
 }
 </style>

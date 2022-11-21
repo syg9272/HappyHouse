@@ -7,7 +7,7 @@
           <router-link :to="{ name: 'servicenotice' }" class="menu service-notice-list"
             >공지사항</router-link
           >
-          <router-link :to="{ name: 'serviceqna' }" class="menu service-qna-list">FQA</router-link>
+          <router-link :to="{ name: 'serviceqna' }" class="menu service-now">FQA</router-link>
           <router-link :to="{ name: 'serviceguide' }" class="menu service-guide-list"
             >이용안내</router-link
           >
@@ -49,7 +49,7 @@
           >
             <div>
               <div class="notice-articleNo">{{ article.articleNo }}</div>
-              <div class="notice-type">공지</div>
+              <div class="notice-type">FQA</div>
               <div>[자주 묻는 질문] {{ article.subject }}</div>
             </div>
             <div>
@@ -340,7 +340,7 @@ export default {
   border-bottom: 3px solid white;
 }
 
-.notice .notice-nav .notice-menu .service-qna-list {
+.notice .notice-nav .notice-menu .service-now {
   color: #0a1151;
   font-weight: bold;
   border-bottom: 3px solid #0a1151;

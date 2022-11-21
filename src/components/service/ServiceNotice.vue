@@ -4,7 +4,7 @@
       <div class="title">고객센터</div>
       <div class="notice-nav">
         <div class="notice-menu">
-          <router-link :to="{ name: 'servicenotice' }" class="menu service-notice-list"
+          <router-link :to="{ name: 'servicenotice' }" class="menu service-now"
             >공지사항</router-link
           >
           <router-link :to="{ name: 'serviceqna' }" class="menu service-qna-list">FQA</router-link>
@@ -340,7 +340,7 @@ export default {
   border-bottom: 3px solid white;
 }
 
-.notice .notice-nav .notice-menu .service-notice-list {
+.notice .notice-nav .notice-menu .service-now {
   color: #0a1151;
   font-weight: bold;
   border-bottom: 3px solid #0a1151;
