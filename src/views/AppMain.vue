@@ -3,9 +3,19 @@
     <div class="main">
       <div class="main-top">
         <div class="title">Find Best Place For Living</div>
-        <input class="location-search" type="text" placeholder="지역 검색" />
+        <div class="main-search">
+          <input
+            :value="dong"
+            @input="changeDong"
+            @keyup.enter="getMap()"
+            class="location-search"
+            type="text"
+            placeholder="지역 검색"
+          />
+          <img @click="getMap()" src="@/assets/img/search.png" alt="mark" />
+        </div>
         <div>
-          <button class="btn-show-more">Show more</button>
+          <button @click="moveMap()" class="btn-show-more">Show more</button>
           <!-- <button class="btn-hot-item">Hot item</button> -->
         </div>
       </div>
@@ -156,7 +166,6 @@
 <script>
 // @ is an alias to /src
 // import HelloWorld from "@/components/HelloWorld.vue";
-
 // import Swiper from "@/components/common/TheSwiper.vue";
 
 // import { Swiper, SwiperSlide } from "vue-awesome-swiper";
@@ -175,11 +184,23 @@ export default {
   data() {
     return {
       aptImg: require("../assets/img/apt2.jpg"),
+      dong: null,
     };
   },
   methods: {
     moveMap() {
       this.$router.push({ name: "map" });
+    },
+    changeDong(e) {
+      this.dong = e.target.value;
+    },
+    getMap() {
+      this.$router.push({
+        name: "map",
+        params: {
+          dong: this.dong,
+        },
+      });
     },
   },
 };
@@ -268,6 +289,13 @@ export default {
   padding: 200px 0;
 }
 
+.main .main-top .main-search {
+  margin: 0;
+  /* top: 350px; */
+  /* left: 37%; */
+  /* position: absolute; */
+}
+
 .main .main-top > div {
   display: flex;
   flex-direction: row;
@@ -280,6 +308,15 @@ export default {
   font-weight: 600;
   color: white;
   animation: fadeInRight 1s;
+}
+
+.main .main-top img {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  top: 13px;
+  right: 39%;
+  cursor: pointer;
 }
 
 .main .main-top > div button {
@@ -303,13 +340,14 @@ export default {
 }
 
 .main .location-search {
+  position: relative;
   width: 500px;
   height: 50px;
   padding: 15px 30px;
   margin: auto;
-  background-image: url("@/assets/img/search.png");
+  /* background-image: url("@/assets/img/search.png");
   background-position: 460px;
-  background-repeat: no-repeat;
+  background-repeat: no-repeat; */
   outline: none;
   border-radius: 25px;
   border: 0.3px solid rgba(0, 0, 0, 0.5);

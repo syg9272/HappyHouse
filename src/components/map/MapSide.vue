@@ -1,33 +1,43 @@
 <template>
-  <div class="side-bar">
+  <div class="side-bar" v-if="side">
     <div>
       <img class="apt-img" src="@/assets/img/apt1.png" alt="apt-img" />
       <div class="close-side-bar">
-        <img src="@/assets/img/close-side-bar.png" alt="close-side-bar" />
+        <img @click="closeSide()" src="@/assets/img/close-side-bar.png" alt="close-side-bar" />
       </div>
     </div>
     <div class="detail-info">
       <div class="detail-title">
-        <div>동아(92-0)</div>
+        <div>{{ apt.apartmentName }}</div>
         <img class="heart" src="@/assets/img/like-select.png" alt="like" />
       </div>
       <div class="apt-info">
         <table class="apt-info-table">
           <tr>
             <th>건물 명</th>
-            <td>동아(92-0)</td>
+            <td>{{ apt.apartmentName }}</td>
           </tr>
           <tr>
             <th>법정동</th>
-            <td>영주동</td>
+            <td>{{ deal[0].dong }}</td>
           </tr>
           <tr>
             <th>지번 주소</th>
-            <td>부산광역시 중구 영주동 92</td>
+            <td>
+              {{
+                deal[0].sidoName +
+                " " +
+                deal[0].gugunName +
+                " " +
+                deal[0].dong +
+                " " +
+                deal[0].jibun
+              }}
+            </td>
           </tr>
           <tr>
-            <th>도로명 주소</th>
-            <td>부산광역시 중구 영주로 73</td>
+            <th>건축 년도</th>
+            <td>{{ deal[0].buildYear }}</td>
           </tr>
         </table>
       </div>
@@ -40,8 +50,8 @@
             <th>층</th>
           </thead>
           <tbody>
-            <tr>
-              <td>2022-01-18</td>
+            <tr v-for="item in deal" :key="item" :deal="deal">
+              <td>{{ deal }}</td>
               <td>18,300만원</td>
               <td>73.56㎡</td>
               <td>4층</td>
@@ -94,7 +104,38 @@
   </div>
 </template>
 
-<style>
+<script>
+import http from "@/api/http";
+
+export default {
+  name: "MapSide",
+  props: {
+    isSide: Boolean,
+    apt: Object,
+  },
+  data() {
+    return {
+      side: this.isSide,
+      deal: null,
+    };
+  },
+  methods: {
+    closeSide() {
+      this.side = !this.side;
+      this.$emit("updateParent");
+    },
+  },
+  created() {
+    http.post("/apt/detailAptList", this.apt).then((data) => {
+      console.log(data.data);
+      this.deal = data.data.list;
+      console.log(this.deal);
+    });
+  },
+};
+</script>
+
+<style scoped>
 /* main side bar css */
 .side-bar {
   display: flex;
@@ -105,6 +146,7 @@
   height: 86%;
   overflow-x: hidden;
   box-shadow: 4px 4px 4px 2px rgba(0, 0, 0, 0.25);
+  z-index: 999;
 }
 
 .side-bar .apt-img {
@@ -119,6 +161,7 @@
   left: 30px;
   width: 15px;
   height: 24px;
+  cursor: pointer;
 }
 
 /* 아파트 정보 */
@@ -151,10 +194,13 @@
 
 .side-bar .detail-info .apt-info {
   border-bottom: 0.3px solid rgba(0, 0, 0, 0.274);
+  overflow: auto;
+  min-height: 100px;
 }
 
 .side-bar .detail-info .apt-info-table {
   padding: 10px 10px 10px 20px;
+  white-space: nowrap;
 }
 
 .side-bar .detail-info .apt-info-table th {
