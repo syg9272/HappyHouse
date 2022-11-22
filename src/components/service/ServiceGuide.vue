@@ -28,14 +28,14 @@
           <div>
             <img class="guide-img" :src="guideImg" alt="guide-1" />
             <div class="page-img-div">
-              <div>
+              <div @click="moveMap()">
                 <img class="page-img" :src="mapImg" alt="map" />
                 <div>
                   <div class="guide-title">넓은 지도 화면에 강력한 검색 필터 기능</div>
                   <div class="guide-text">넓은 지도 화면에 강력한 검색 기능</div>
                 </div>
               </div>
-              <div>
+              <div @click="moveMap()">
                 <img class="page-img" :src="mapSearch" alt="map" />
                 <div>
                   <div class="guide-title">아파트 전체 매물 검색</div>
@@ -44,7 +44,7 @@
                   </div>
                 </div>
               </div>
-              <div>
+              <div @click="moveMap()">
                 <img class="page-img" :src="mapSideBar" alt="map" />
                 <div>
                   <div class="guide-title">학군 및 아파트 매물 정보를 한눈에 확인</div>
@@ -54,7 +54,7 @@
                   </div>
                 </div>
               </div>
-              <div>
+              <div @click="moveMap()">
                 <img class="page-img" :src="mapChart" alt="map" />
                 <div>
                   <div class="guide-title">시세/실거래가, 상세한 거래정보</div>
@@ -75,14 +75,14 @@
           <div>
             <img class="guide-img" :src="likeImg" alt="guide-1" />
             <div class="page-img-div">
-              <div>
+              <div @click="moveLike()">
                 <img class="page-img" :src="likeList" alt="map" />
                 <div>
                   <div class="guide-title">넓은 지도 화면에 강력한 검색 필터 기능</div>
                   <div class="guide-text">넓은 지도 화면에 강력한 검색 기능</div>
                 </div>
               </div>
-              <div>
+              <div @click="moveLike()">
                 <img class="page-img" :src="likeMove" alt="map" />
                 <div>
                   <div class="guide-title">아파트 전체 매물 검색</div>
@@ -115,6 +115,14 @@ export default {
       likeList: require("../../assets/img/like-list.png"),
       likeMove: require("../../assets/img/like-move.png"),
     };
+  },
+  methods: {
+    moveMap() {
+      this.$router.push({ name: "map" });
+    },
+    moveLike() {
+      this.$router.push({ name: "like" });
+    },
   },
 };
 </script>
@@ -236,6 +244,7 @@ export default {
 .notice .guide-area .page-img-div > div {
   width: 45%;
   margin: 10px auto;
+  cursor: pointer;
 }
 
 .notice .guide-area .page-img-div > div > div {

@@ -77,5 +77,6 @@ export default {
 <style>
 canvas {
   padding: 15px;
+  border-bottom: 0.3px solid rgba(0, 0, 0, 0.274);
 }
 </style>

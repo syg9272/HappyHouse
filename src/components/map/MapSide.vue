@@ -25,6 +25,57 @@
           alt="like"
         />
       </div>
+      <div class="apt-rank">
+        <!-- <div class="apt-rank-title">인기 순위</div> -->
+        <div class="apt-rank-list">
+          <span>{{ deal[0].dong }}</span>
+          <div>
+            <animated-number :value="aptRank" :duration="2000" :formatValue="formatToPrice">
+            </animated-number>
+          </div>
+          <span>위</span>
+          <span class="apt-rank-content">거래량 {{ deal.length }} 회</span>
+        </div>
+      </div>
+      <div class="info-title">학군 정보</div>
+      <div class="school-info">
+        <div class="school-type">
+          <div @click="selectEle()" :class="{ isSelected: isElement }">초등학교</div>
+          <div @click="selectMiddle()" :class="{ isSelected: isMiddle }">중학교</div>
+          <div @click="selectHigh()" :class="{ isSelected: isHigh }">고등학교</div>
+        </div>
+        <div v-if="isElement">
+          <div class="list-item" v-for="item in elementList" :key="item" :elementList="elementList">
+            <div class="school-name">
+              {{ item.schoolName }}
+            </div>
+            <div class="school-distance">
+              {{ item.distance }}
+            </div>
+          </div>
+        </div>
+        <div v-if="isMiddle">
+          <div class="list-item" v-for="item in middleList" :key="item" :middleList="middleList">
+            <div class="school-name">
+              {{ item.schoolName }}
+            </div>
+            <div class="school-distance">
+              {{ item.distance }}
+            </div>
+          </div>
+        </div>
+        <div v-if="isHigh">
+          <div class="list-item" v-for="item in highList" :key="item" :highList="highList">
+            <div class="school-name">
+              {{ item.schoolName }}
+            </div>
+            <div class="school-distance">
+              {{ item.distance }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="info-title">아파트 정보</div>
       <div class="apt-info">
         <table class="apt-info-table">
           <tr>
@@ -55,6 +106,7 @@
           </tr>
         </table>
       </div>
+      <div class="info-title">거래 정보</div>
       <div class="deal-table">
         <table>
           <thead>
@@ -82,6 +134,29 @@
         </table>
       </div>
       <map-chart :apt="apt"></map-chart>
+      <div class="review-title">
+        <div class="score">3.5</div>
+        <div>
+          <a href="">
+            <img src="@/assets/img/fullStar.png" alt="star1" />
+            <img src="@/assets/img/fullStar.png" alt="star2" />
+            <img src="@/assets/img/fullStar.png" alt="star3" />
+            <img src="@/assets/img/falfStar.png" alt="star4" />
+            <img src="@/assets/img/star.png" alt="star5" />
+          </a>
+        </div>
+        <div class="count">리뷰 2개</div>
+      </div>
+      <div class="review-content">
+        <div class="review">
+          대형마트, 백화점도 근교에 있고요. 용산 가족 공원도 도보로 갈 수 있어서 환경은 만족하고
+          있습니다. 교통도 ...
+        </div>
+        <div class="review">
+          대형마트, 백화점도 근교에 있고요. 용산 가족 공원도 도보로 갈 수 있어서 환경은 만족하고
+          있습니다. 교통도 ...
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -90,6 +165,9 @@
 import http from "@/api/http";
 import { mapState } from "vuex";
 
+// 숫자 오르는 애니메이션 라이브러리
+import AnimatedNumber from "animated-number-vue";
+// 차트 라이브러리
 import MapChart from "@/components/map/MapChart.vue";
 import MapLoadView from "@/components/map/MapLoadView.vue";
 
@@ -101,6 +179,7 @@ export default {
   components: {
     MapChart,
     MapLoadView,
+    AnimatedNumber,
   },
   data() {
     return {
@@ -108,6 +187,16 @@ export default {
       deal: null,
       isLike: false,
       chartInfo: null,
+
+      aptRank: 0,
+
+      isElement: true,
+      isMiddle: false,
+      isHigh: false,
+
+      elementList: [],
+      middleList: [],
+      highList: [],
     };
   },
   computed: {
@@ -116,8 +205,27 @@ export default {
     ...mapState(mapStore, ["isSide"]),
     ...mapState(mapStore, ["year"]),
     ...mapState(mapStore, ["avgAmount"]),
+    ...mapState(mapStore, ["schoolList"]),
   },
   methods: {
+    selectEle() {
+      this.isElement = true;
+      this.isMiddle = false;
+      this.isHigh = false;
+    },
+    selectMiddle() {
+      this.isElement = false;
+      this.isMiddle = true;
+      this.isHigh = false;
+    },
+    selectHigh() {
+      this.isElement = false;
+      this.isMiddle = false;
+      this.isHigh = true;
+    },
+    formatToPrice(value) {
+      return `${Number(value).toFixed(0)}`;
+    },
     closeSide() {
       this.$store.commit("mapStore/SET_IS_SIDE");
       this.$emit("updateParent");
@@ -158,7 +266,23 @@ export default {
       this.isLike = data.data.like;
       this.deal = data.data.list;
       this.aptInfo = data.data.list[0];
-      console.log(this.deal);
+      console.log("정보정보", data.data);
+      this.aptRank = data.data.aptRank.rank;
+      this.$store.commit("mapStore/SET_SCHOOL_LIST", data.data.schoolList);
+      for (let index = 0; index < this.schoolList.length; index++) {
+        const element = this.schoolList[index];
+        element.distance += "km";
+        if (element.schoolName.includes("초등학교")) {
+          this.elementList.push(element);
+        } else if (element.schoolName.includes("중학교")) {
+          this.middleList.push(element);
+        } else {
+          this.highList.push(element);
+        }
+      }
+      console.log(this.elementList);
+      console.log(this.middleList);
+      console.log(this.highList);
     });
     console.log("아파트 정보 ~!!!!", this.aptInfo);
   },
@@ -211,12 +335,20 @@ export default {
   flex-direction: column;
 }
 
+.side-bar .detail-info .info-title {
+  border-top: 20px solid rgba(10, 17, 81, 0.1);
+  padding: 20px 20px 0 40px;
+  font-size: 22px;
+  font-weight: bold;
+  color: rgba(10, 17, 81, 0.5);
+}
+
 .side-bar .detail-info .detail-title {
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 20px 20px 20px 40px;
-  border-bottom: 0.3px solid rgba(0, 0, 0, 0.274);
+  /* border-bottom: 0.3px double rgba(0, 0, 0, 0.274); */
 }
 
 .side-bar .detail-info .detail-title div {
@@ -231,17 +363,95 @@ export default {
   cursor: pointer;
 }
 
+/* side-bar apt rank css */
+.side-bar .detail-info .apt-rank {
+  border-bottom: 0.3px solid rgba(0, 0, 0, 0.274);
+  padding: 20px 20px 20px 40px;
+}
+
+/* .side-bar .detail-info .apt-rank .apt-rank-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #1a73e8;
+  margin-bottom: 20px;
+} */
+
+.side-bar .detail-info .apt-rank .apt-rank-list {
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 18px;
+}
+.side-bar .detail-info .apt-rank .apt-rank-list .apt-rank-content {
+  margin-left: 90px;
+  color: #666666;
+  font-size: 16px;
+}
+.side-bar .detail-info .apt-rank .apt-rank-list > * {
+  margin-right: 10px;
+}
+
+.side-bar .detail-info .apt-rank .apt-rank-list div {
+  font-size: 24px;
+  color: #1a73e8;
+  font-weight: bold;
+}
+
+/* side-bar apt school css*/
+.side-bar .detail-info .school-info {
+  border-bottom: 0.3px solid rgba(0, 0, 0, 0.274);
+  padding: 20px 20px 20px 40px;
+  max-height: 280px;
+  overflow: auto;
+}
+
+.side-bar .detail-info .school-info .school-type {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  border-top: 0.3px solid rgba(0, 0, 0, 0.274);
+  border-bottom: 0.3px solid rgba(0, 0, 0, 0.274);
+  cursor: pointer;
+}
+
+.side-bar .detail-info .school-info .school-type div {
+  width: 100%;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+}
+
+.side-bar .detail-info .school-info .school-type div:hover {
+  font-weight: bold;
+}
+
+.side-bar .detail-info .school-info .school-type .isSelected {
+  border-bottom: 3px solid black;
+  color: #1a73e8;
+  font-weight: normal !important;
+}
+
+.side-bar .detail-info .school-info .list-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 20px 50px;
+  margin: auto;
+  border-bottom: 0.3px solid rgba(0, 0, 0, 0.1);
+}
+
+.side-bar .detail-info .school-info .list-item .school-distance {
+  font-weight: bold;
+}
+
 .side-bar .detail-info .apt-info {
   border-bottom: 0.3px solid rgba(0, 0, 0, 0.274);
-  overflow: auto;
-  /* max-height: 230px; */
 }
 
 .side-bar .detail-info .apt-info-table {
   padding: 10px 10px 10px 20px;
   white-space: nowrap;
-  /* max-height: 230px; */
-  /* overflow: auto; */
 }
 
 .side-bar .detail-info .apt-info-table th {

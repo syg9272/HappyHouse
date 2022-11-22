@@ -5,6 +5,7 @@ const mapStore = {
     isSide: false,
     year: null,
     avgAmount: null,
+    schoolList: null,
   },
   mutations: {
     SET_APT: function (state, info) {
@@ -18,6 +19,9 @@ const mapStore = {
     },
     SET_AVG_AMOUNT: function (state, avgAmount) {
       state.avgAmount = avgAmount;
+    },
+    SET_SCHOOL_LIST: function (state, school) {
+      state.schoolList = school;
     },
   },
   actions: {},

@@ -77,6 +77,7 @@ export default {
       console.log("infoo!!!!!!!!!", info);
       this.$store.commit("mapStore/SET_APT", info);
       this.$store.commit("mapStore/SET_IS_SIDE");
+      // this.$store.commit("mapStore/SET_SCHOOL_LIST", );
     }
     // this.underFive();
     if (this.$route.params.dong != null) {
@@ -105,6 +106,7 @@ export default {
   computed: {
     ...mapState(mapStore, ["apt"]),
     ...mapState(mapStore, ["isSide"]),
+    // ...mapState(mapStore, ["schoolList"]),
   },
   watch: {
     level(level) {
@@ -138,10 +140,6 @@ export default {
     },
   },
   mounted() {
-    // document.getElementsByTagName("svg")[0].addEventListener("click", function () {
-    //   document.getElementsByClassName("map-search")[0].style.display = "hidden";
-    // });
-
     if (window.kakao && window.kakao.maps) {
       this.loadMap();
     } else {
