@@ -20,134 +20,109 @@
         </div>
       </div>
 
-      <div class="recent-deal">
+      <div class="hot-item">
         <div class="title">
-          <div class="line back-to-position to-left delay-0"></div>
-          <div class="content-title back-to-position to-left delay-1">recent deal</div>
-        </div>
-        <div class="recent-deal-list scroll-spy">
-          <div class="swiper-container">
-            <div class="swiper-wrapper">
-              <div class="swiper-slide">
-                <img :src="aptImg" alt="recent-deal-apt" />
-                <div>
-                  <div class="apt-name">000 아파트</div>
-                  <div>대전광역시 대종로505번길 59</div>
-                  <a href="javascript:void(0)" class="move-apt">자세히 보기</a>
-                </div>
-              </div>
-              <div class="swiper-slide">
-                <img :src="aptImg" alt="recent-deal-apt" />
-                <div>
-                  <div class="apt-name">000 아파트</div>
-                  <div>대전광역시 대종로505번길 59</div>
-                  <a href="javascript:void(0)" class="move-apt">자세히 보기</a>
-                </div>
-              </div>
-              <div class="swiper-slide">
-                <img :src="aptImg" alt="recent-deal-apt" />
-                <div>
-                  <div class="apt-name">000 아파트</div>
-                  <div>대전광역시 대종로505번길 59</div>
-                  <a href="javascript:void(0)" class="move-apt">자세히 보기</a>
-                </div>
-              </div>
-              <!-- <div class="swiper-slide">
-                <img :src="aptImg" alt="recent-deal-apt" />
-                <div>
-                  <div class="apt-name">000 아파트</div>
-                  <div>대전광역시 대종로505번길 59</div>
-                  <a href="javascript:void(0)" class="move-apt">자세히 보기</a>
-                </div>
-              </div>
-              <div class="swiper-slide">
-                <img :src="aptImg" alt="recent-deal-apt" />
-                <div>
-                  <div class="apt-name">000 아파트</div>
-                  <div>대전광역시 대종로505번길 59</div>
-                  <a href="javascript:void(0)" class="move-apt">자세히 보기</a>
-                </div>
-              </div> -->
-            </div>
-          </div>
-          <div class="swiper-pagination"></div>
-        </div>
-      </div>
-
-      <div class="hot-item scroll-spy">
-        <div class="title">
-          <div class="content-title back-to-position to-right delay-0">Hot item</div>
-          <div class="line back-to-position to-right delay-1"></div>
+          <div class="content-title">Hot Area</div>
+          <div class="line"></div>
         </div>
         <div class="recent-deal-list">
-          <div class="swiper-container">
-            <div class="swiper-wrapper">
-              <div style="background-image: URL(@/assets/img/apt6.jpg)" class="swiper-slide">
-                <div>
-                  <div class="apt-name">000 아파트</div>
-                  <div>
-                    <div class="material-icons">house</div>
-                    <div>부산광역시 중구 영주동 92</div>
-                  </div>
-                </div>
-              </div>
-              <div style="background-image: URL(@/assets/img/apt13.jpg)" class="swiper-slide">
-                <div>
-                  <div class="apt-name">000 아파트</div>
-                  <div>
-                    <div class="material-icons">house</div>
-                    <div>부산광역시 중구 영주동 92</div>
-                  </div>
-                </div>
-              </div>
-              <div style="background-image: URL(@/assets/img/apt8.jpg)" class="swiper-slide">
-                <div>
-                  <div class="apt-name">000 아파트</div>
-                  <div>
-                    <div class="material-icons">house</div>
-                    <div>부산광역시 중구 영주동 92</div>
-                  </div>
-                </div>
-              </div>
-              <div style="background-image: URL(@/assets/img/apt10.jpg)" class="swiper-slide">
-                <div>
-                  <div class="apt-name">000 아파트</div>
-                  <div>
-                    <div class="material-icons">house</div>
-                    <div>부산광역시 중구 영주동 92</div>
-                  </div>
-                </div>
-              </div>
-              <div style="background-image: URL(@/assets/img/apt1.png)" class="swiper-slide">
-                <div>
-                  <div class="apt-name">000 아파트</div>
-                  <div>
-                    <div class="material-icons">house</div>
-                    <div>부산광역시 중구 영주동 92</div>
-                  </div>
-                </div>
+          <div class="hot-area-item area-a swiper-slide">
+            <div>
+              <div class="apt-name">000 아파트</div>
+              <div>
+                <div class="material-icons">house</div>
+                <div>부산광역시 중구 영주동 92</div>
               </div>
             </div>
           </div>
-          <div class="swiper-page">
+          <div class="hot-area-item area-b swiper-slide">
+            <div>
+              <div class="apt-name">000 아파트</div>
+              <div>
+                <div class="material-icons">house</div>
+                <div>부산광역시 중구 영주동 92</div>
+              </div>
+            </div>
+          </div>
+          <div class="hot-area-item area-c swiper-slide">
+            <div>
+              <div class="apt-name">000 아파트</div>
+              <div>
+                <div class="material-icons">house</div>
+                <div>부산광역시 중구 영주동 92</div>
+              </div>
+            </div>
+          </div>
+          <div class="hot-area-item area-d swiper-slide">
+            <div>
+              <div class="apt-name">000 아파트</div>
+              <div>
+                <div class="material-icons">house</div>
+                <div>부산광역시 중구 영주동 92</div>
+              </div>
+            </div>
+          </div>
+          <div class="hot-area-item area-e swiper-slide">
+            <div>
+              <div class="apt-name">000 아파트</div>
+              <div>
+                <div class="material-icons">house</div>
+                <div>부산광역시 중구 영주동 92</div>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="swiper-page">
             <div class="swiper-prev">
               <img src="@/assets/img/swiper-prev.png" alt="prev" />
             </div>
             <div class="swiper-next">
               <img src="@/assets/img/swiper-next.png" alt="next" />
             </div>
+          </div> -->
+        </div>
+      </div>
+
+      <div class="recent-deal">
+        <div class="title">
+          <div class="line"></div>
+          <div class="content-title">recent deal</div>
+        </div>
+        <div class="recent-deal-list">
+          <div class="swiper-slide">
+            <img :src="aptImg" alt="recent-deal-apt" />
+            <div>
+              <div class="apt-name">000 아파트</div>
+              <div>대전광역시 대종로505번길 59</div>
+              <a href="javascript:void(0)" class="move-apt">자세히 보기</a>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <img :src="aptImg" alt="recent-deal-apt" />
+            <div>
+              <div class="apt-name">000 아파트</div>
+              <div>대전광역시 대종로505번길 59</div>
+              <a href="javascript:void(0)" class="move-apt">자세히 보기</a>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <img :src="aptImg" alt="recent-deal-apt" />
+            <div>
+              <div class="apt-name">000 아파트</div>
+              <div>대전광역시 대종로505번길 59</div>
+              <a href="javascript:void(0)" class="move-apt">자세히 보기</a>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="notice-bar">
+      <!-- <div class="notice-bar">
         <h2>NOTICE</h2>
         <div class="swiper-container">
           <div class="swiper-wrapper">
             <div class="swiper-slide">
               <a href="javascript:void(0)">버전 업데이트와 시스템 개선 및 점검 안내 </a>
             </div>
-            <!-- <div class="swiper-slide">
+            <div class="swiper-slide">
               <a href="javascript:void(0)">[이벤트] 2022 이벤트</a>
             </div>
             <div class="swiper-slide">
@@ -155,10 +130,10 @@
             </div>
             <div class="swiper-slide">
               <a href="javascript:void(0)">시스템 개선 및 점검 안내 </a>
-            </div> -->
+            </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </main>
 </template>
@@ -291,9 +266,6 @@ export default {
 
 .main .main-top .main-search {
   margin: 0;
-  /* top: 350px; */
-  /* left: 37%; */
-  /* position: absolute; */
 }
 
 .main .main-top > div {
@@ -307,7 +279,7 @@ export default {
   font-size: 50px;
   font-weight: 600;
   color: white;
-  animation: fadeInRight 1s;
+  animation: fadeInLeft 1s;
 }
 
 .main .main-top img {
@@ -332,6 +304,7 @@ export default {
 .main .main-top > div .btn-show-more {
   background-color: #0a1151;
   color: white;
+  cursor: pointer;
 }
 
 .main .main-top > div .btn-hot-item {
@@ -345,9 +318,6 @@ export default {
   height: 50px;
   padding: 15px 30px;
   margin: auto;
-  /* background-image: url("@/assets/img/search.png");
-  background-position: 460px;
-  background-repeat: no-repeat; */
   outline: none;
   border-radius: 25px;
   border: 0.3px solid rgba(0, 0, 0, 0.5);
@@ -365,6 +335,7 @@ export default {
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  margin: 80px 0;
 }
 
 @keyframes fadeInLeft {
@@ -411,10 +382,9 @@ export default {
 }
 
 /* notice */
-.notice-bar {
+/* .notice-bar {
   margin: 50px 0 !important;
   width: 100%;
-  /* height: 100px; */
   padding: 20px 0;
   background-color: #d1d6e7;
   display: flex;
@@ -425,7 +395,6 @@ export default {
   color: #0a1151;
   font-size: 20px;
   font-weight: bold;
-  /* margin-right: 20px; */
 }
 .notice-bar .swiper-container {
   height: 50px;
@@ -443,38 +412,39 @@ export default {
 
 .notice-bar .swiper-container .swiper-slide a:hover {
   text-decoration: underline;
-}
+} */
 
 .main .recent-deal-list {
-  height: 430px;
-  position: relative;
   transition: height 0.4s;
-  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 .main .recent-deal-list.hide {
   height: 0;
 }
-.main .recent-deal-list .swiper-container {
+/* .main .recent-deal-list .swiper-container {
   width: calc(400px * 3 + 120px);
   height: 360px;
-  /* 화면 정중앙에 위치시키는 방법 */
+  화면 정중앙에 위치시키는 방법
   position: absolute;
   padding-top: 30px;
   top: 30px;
   left: 50%;
   margin-left: calc((400px * 3 + 120px) / -2);
-}
+} */
 .main .recent-deal-list .swiper-slide {
   width: 400px;
   height: 300px;
   opacity: 1;
   transition: opacity 1s;
-  position: relative;
   display: flex;
   flex-direction: column;
   border-radius: 10px;
   border: 1px solid #edeef2;
   margin: 0 20px;
+  cursor: pointer;
 }
 
 .main .recent-deal-list .swiper-slide:hover {
@@ -483,24 +453,49 @@ export default {
   z-index: 1;
 }
 
-.main .hot-item .recent-deal-list {
-  height: 500px;
-}
-
-.main .hot-item .swiper-container {
-  padding-top: 0;
-  width: calc(300px * 3 + 20px);
-  height: 460px;
-  margin-left: calc((300px * 3 + 20px) / -2);
-  z-index: 999;
-}
-
 .main .hot-item .swiper-slide {
-  width: 280px !important;
+  /* width: 280px !important; */
   height: 400px;
   background-repeat: no-repeat;
   object-fit: cover;
   margin: 20px;
+}
+
+.main .hot-item .recent-deal-list .swiper-slide:hover {
+  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  transform: scale(105%);
+  z-index: 1;
+  width: 940px;
+}
+
+.main .hot-item .area-a {
+  width: 450px !important;
+  height: 300px;
+  background-image: url(@/assets/img/apt4.jpg);
+}
+
+.main .hot-item .area-b {
+  width: 450px !important;
+  height: 300px;
+  background-image: url(@/assets/img/apt10.jpg);
+}
+
+.main .hot-item .area-c {
+  width: 450px !important;
+  height: 300px;
+  background-image: url(@/assets/img/apt6.jpg);
+}
+
+.main .hot-item .area-d {
+  width: 940px !important;
+  height: 300px;
+  background-image: url(@/assets/img/apt8.jpg);
+}
+
+.main .hot-item .area-e {
+  width: 400px !important;
+  height: 300px;
+  background-image: url(@/assets/img/apt3.jpg);
 }
 
 .main .hot-item .swiper-slide .apt-name {
@@ -522,11 +517,6 @@ export default {
 
 .main .hot-item .swiper-slide > div > div {
   color: white;
-}
-
-.main .hot-item .swiper-slide .main .recent-deal-list .swiper-slide .apt-name {
-  color: #0a1151;
-  font-weight: bold;
 }
 
 .main .recent-deal-list .swiper-slide > img {
@@ -567,74 +557,5 @@ export default {
   width: 20px;
   height: 20px;
   margin-right: 10px;
-}
-
-.main .recent-deal-list .swiper-slide-active {
-  /* 가운데 있는 이미지:active */
-  opacity: 1;
-  transition: all 0.1s linear;
-}
-
-.main .recent-deal-list .swiper-slide-active:hover {
-  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
-  transform: scale(105%);
-  z-index: 1;
-}
-
-.main .recent-deal-list .swiper-slide .btn {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-}
-.main .recent-deal-list .swiper-pagination {
-  height: 50px;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 999;
-}
-.main .recent-deal-list .swiper-pagination .swiper-pagination-bullet {
-  background-color: gray;
-  width: 12px;
-  height: 12px;
-  margin-right: 6px;
-  outline: none;
-}
-.main .recent-deal-list .swiper-pagination .swiper-pagination-bullet:last-child {
-  margin-right: 0;
-}
-.main .recent-deal-list .swiper-pagination .swiper-pagination-bullet-active {
-  background-color: #0a1151;
-}
-.main .recent-deal-list .swiper-prev,
-.main .recent-deal-list .swiper-next {
-  width: 42px;
-  height: 42px;
-  /* border: 2px solid #333; */
-  border-radius: 50%;
-  position: absolute;
-  top: 45%;
-  z-index: 1;
-  cursor: pointer;
-  outline: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: 0.4s;
-}
-.main .recent-deal-list .swiper-prev {
-  left: 50%;
-  margin-left: -530px;
-}
-.main .recent-deal-list .swiper-next {
-  right: 50%;
-  margin-right: -530px;
-}
-.main .recent-deal-list .swiper-prev:hover,
-.main .recent-deal-list .swiper-next:hover {
-  background-color: #0a1151;
-  color: #fff;
 }
 </style>
