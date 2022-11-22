@@ -3,8 +3,8 @@
     <div class="like">
       <div class="title">관심목록</div>
       <div class="like-list">
-        <div v-for="item in likeList" :key="item" :likelist="likeList" class="like-item">
-          <img src="@/assets/img/apt1.png" alt="apt" />
+        <div v-for="(item, index) in likeList" :key="item" :likelist="likeList" class="like-item">
+          <img :src="aptImg[index]" alt="apt" />
           <div>
             <div class="apt-title">
               <div class="apt-name">{{ item.apartmentName }}</div>
@@ -21,165 +21,14 @@
               </div>
             </div>
             <div>
-              <a @click.prevent="moveApt()"
+              <a
+                @click.prevent="moveApt(item.aptCode, item.dongCode, item.dong, item.apartmentName)"
                 ><img class="apt-like-icon" src="@/assets/img/plus.png" alt="move-apt" />아파트
                 보러가기</a
               >
             </div>
           </div>
         </div>
-        <!-- <div class="like-item">
-          <img src="@/assets/img/apt2.jpg" alt="apt" />
-          <div>
-            <div class="apt-title">
-              <div class="apt-name">000 아파트</div>
-              <img @click="removeLike()" src="@/assets/img/like-select.png" alt="like" />
-            </div>
-            <div>
-              <img class="apt-like-icon" src="@/assets/img/apt-icon.png" alt="apt-info" />
-              <div>부산광역시 중구 영주동 92</div>
-            </div>
-            <div>
-              <a @click.prevent="moveApt()"
-                ><img class="apt-like-icon" src="@/assets/img/plus.png" alt="move-apt" />아파트
-                보러가기</a
-              >
-            </div>
-          </div>
-        </div>
-        <div class="like-item">
-          <img src="@/assets/img/apt3.jpg" alt="apt" />
-          <div>
-            <div class="apt-title">
-              <div class="apt-name">000 아파트</div>
-              <img @click="removeLike()" src="@/assets/img/like-select.png" alt="like" />
-            </div>
-            <div>
-              <img class="apt-like-icon" src="@/assets/img/apt-icon.png" alt="apt-info" />
-              <div>부산광역시 중구 영주동 92</div>
-            </div>
-            <div>
-              <a @click.prevent="moveApt()"
-                ><img class="apt-like-icon" src="@/assets/img/plus.png" alt="move-apt" />아파트
-                보러가기</a
-              >
-            </div>
-          </div>
-        </div>
-        <div class="like-item">
-          <img src="@/assets/img/apt4.jpg" alt="apt" />
-          <div>
-            <div class="apt-title">
-              <div class="apt-name">000 아파트</div>
-              <img @click="removeLike()" src="@/assets/img/like-select.png" alt="like" />
-            </div>
-            <div>
-              <img class="apt-like-icon" src="@/assets/img/apt-icon.png" alt="apt-info" />
-              <div>부산광역시 중구 영주동 92</div>
-            </div>
-            <div>
-              <a @click.prevent="moveApt()"
-                ><img class="apt-like-icon" src="@/assets/img/plus.png" alt="move-apt" />아파트
-                보러가기</a
-              >
-            </div>
-          </div>
-        </div>
-        <div class="like-item">
-          <img src="@/assets/img/apt5.jpg" alt="apt" />
-          <div>
-            <div class="apt-title">
-              <div class="apt-name">000 아파트</div>
-              <img @click="removeLike()" src="@/assets/img/like-select.png" alt="like" />
-            </div>
-            <div>
-              <img class="apt-like-icon" src="@/assets/img/apt-icon.png" alt="apt-info" />
-              <div>부산광역시 중구 영주동 92</div>
-            </div>
-            <div>
-              <a @click.prevent="moveApt()"
-                ><img class="apt-like-icon" src="@/assets/img/plus.png" alt="move-apt" />아파트
-                보러가기</a
-              >
-            </div>
-          </div>
-        </div>
-        <div class="like-item">
-          <img src="@/assets/img/apt6.jpg" alt="apt" />
-          <div>
-            <div class="apt-title">
-              <div class="apt-name">000 아파트</div>
-              <img @click="removeLike()" src="@/assets/img/like-select.png" alt="like" />
-            </div>
-            <div>
-              <img class="apt-like-icon" src="@/assets/img/apt-icon.png" alt="apt-info" />
-              <div>부산광역시 중구 영주동 92</div>
-            </div>
-            <div>
-              <a @click.prevent="moveApt()"
-                ><img class="apt-like-icon" src="@/assets/img/plus.png" alt="move-apt" />아파트
-                보러가기</a
-              >
-            </div>
-          </div>
-        </div>
-        <div class="like-item">
-          <img src="@/assets/img/apt7.jpg" alt="apt" />
-          <div>
-            <div class="apt-title">
-              <div class="apt-name">000 아파트</div>
-              <img @click="removeLike()" src="@/assets/img/like-select.png" alt="like" />
-            </div>
-            <div>
-              <img class="apt-like-icon" src="@/assets/img/apt-icon.png" alt="apt-info" />
-              <div>부산광역시 중구 영주동 92</div>
-            </div>
-            <div>
-              <a @click.prevent="moveApt()"
-                ><img class="apt-like-icon" src="@/assets/img/plus.png" alt="move-apt" />아파트
-                보러가기</a
-              >
-            </div>
-          </div>
-        </div>
-        <div class="like-item">
-          <img src="@/assets/img/apt8.jpg" alt="apt" />
-          <div>
-            <div class="apt-title">
-              <div class="apt-name">000 아파트</div>
-              <img @click="removeLike()" src="@/assets/img/like-select.png" alt="like" />
-            </div>
-            <div>
-              <img class="apt-like-icon" src="@/assets/img/apt-icon.png" alt="apt-info" />
-              <div>부산광역시 중구 영주동 92</div>
-            </div>
-            <div>
-              <a @click.prevent="moveApt()"
-                ><img class="apt-like-icon" src="@/assets/img/plus.png" alt="move-apt" />아파트
-                보러가기</a
-              >
-            </div>
-          </div>
-        </div>
-        <div class="like-item">
-          <img src="@/assets/img/apt9.jpg" alt="apt" />
-          <div>
-            <div class="apt-title">
-              <div class="apt-name">000 아파트</div>
-              <img @click="removeLike()" src="@/assets/img/like-select.png" alt="like" />
-            </div>
-            <div>
-              <img class="apt-like-icon" src="@/assets/img/apt-icon.png" alt="apt-info" />
-              <div>부산광역시 중구 영주동 92</div>
-            </div>
-            <div>
-              <a @click.prevent="moveApt()"
-                ><img class="apt-like-icon" src="@/assets/img/plus.png" alt="move-apt" />아파트
-                보러가기</a
-              >
-            </div>
-          </div>
-        </div> -->
       </div>
     </div>
   </main>
@@ -196,6 +45,21 @@ export default {
   data() {
     return {
       likeList: [],
+      aptImg: [
+        require("@/assets/img/apt1.png"),
+        require("@/assets/img/apt2.jpg"),
+        require("@/assets/img/apt3.jpg"),
+        require("@/assets/img/apt4.jpg"),
+        require("@/assets/img/apt5.jpg"),
+        require("@/assets/img/apt6.jpg"),
+        require("@/assets/img/apt7.jpg"),
+        require("@/assets/img/apt8.jpg"),
+        require("@/assets/img/apt9.jpg"),
+        require("@/assets/img/apt10.jpg"),
+        require("@/assets/img/apt11.jpg"),
+        require("@/assets/img/apt12.jpg"),
+        require("@/assets/img/apt13.jpg"),
+      ],
     };
   },
   computed: {
@@ -216,6 +80,18 @@ export default {
           });
       }
       this.$router.go(0);
+    },
+    moveApt(aptCode, dongCode, dong, apartmentName) {
+      // console.log(aptCode, dongCode, dong);
+      this.$router.push({
+        name: "map",
+        params: {
+          aptCode,
+          dongCode,
+          dong,
+          apartmentName,
+        },
+      });
     },
   },
   created() {

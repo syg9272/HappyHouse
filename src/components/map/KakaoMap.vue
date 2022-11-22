@@ -66,8 +66,20 @@ export default {
     };
   },
   created() {
+    if (this.$route.params.aptCode != null) {
+      console.log("!!!!!!!! 사이드바 열어");
+      console.log(this.$route.params);
+      this.apt = {
+        aptCode: this.$route.params.aptCode,
+        dongCode: this.$route.params.dongCode,
+        apartmentName: this.$route.params.apartmentName,
+      };
+      console.log(this.apt);
+      this.isSide = true;
+    }
     // this.underFive();
     if (this.$route.params.dong != null) {
+      console.log("!!!! 아파트 목록만 불러");
       this.dong = this.$route.params.dong;
       http
         .get("/apt/dongList", {

@@ -1,7 +1,7 @@
 <template>
   <div class="side-bar" v-if="side">
     <div>
-      <img class="apt-img" src="@/assets/img/apt1.png" alt="apt-img" />
+      <div id="roadview" class="apt-img"></div>
       <div class="close-side-bar">
         <img @click="closeSide()" src="@/assets/img/close-side-bar.png" alt="close-side-bar" />
       </div>
@@ -73,36 +73,14 @@
                   (item.dealDay < 10 ? "0" + item.dealDay : item.dealDay)
                 }}
               </td>
-              <td>{{ item.dealAmount }} 만원</td>
+              <td>{{ item.dealAmount }}</td>
               <td>{{ item.area }} 평</td>
               <td>{{ item.floor }} 층</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div class="review-title">
-        <div class="score">3.5</div>
-        <div>
-          <a href="">
-            <img src="@/assets/img/fullStar.png" alt="star1" />
-            <img src="@/assets/img/fullStar.png" alt="star2" />
-            <img src="@/assets/img/fullStar.png" alt="star3" />
-            <img src="@/assets/img/falfStar.png" alt="star4" />
-            <img src="@/assets/img/star.png" alt="star5" />
-          </a>
-        </div>
-        <div class="count">리뷰 2개</div>
-      </div>
-      <div class="review-content">
-        <div class="review">
-          대형마트, 백화점도 근교에 있고요. 용산 가족 공원도 도보로 갈 수 있어서 환경은 만족하고
-          있습니다. 교통도 ...
-        </div>
-        <div class="review">
-          대형마트, 백화점도 근교에 있고요. 용산 가족 공원도 도보로 갈 수 있어서 환경은 만족하고
-          있습니다. 교통도 ...
-        </div>
-      </div>
+      <map-chart></map-chart>
     </div>
   </div>
 </template>
@@ -110,6 +88,8 @@
 <script>
 import http from "@/api/http";
 import { mapState } from "vuex";
+
+import MapChart from "@/components/map/MapChart.vue";
 
 const memberStore = "memberStore";
 
@@ -119,12 +99,16 @@ export default {
     isSide: Boolean,
     apt: Object,
   },
+  components: {
+    MapChart,
+  },
   data() {
     return {
       side: this.isSide,
       aptInfo: null,
       deal: null,
       isLike: false,
+      chartInfo: null,
     };
   },
   computed: {
@@ -159,19 +143,57 @@ export default {
           });
       }
     },
+    async loadView() {
+      this.aptInfo = this.apt;
+      this.aptInfo.id = this.userInfo.id;
+      await http.post("/apt/detailAptList", this.aptInfo).then((data) => {
+        console.log(data.data);
+        this.isLike = data.data.like;
+        this.deal = data.data.list;
+        this.aptInfo = data.data.list[0];
+        console.log(this.deal);
+        // console.log(this.aptInfo.lat
+      });
+      var roadviewContainer = document.getElementById("roadview"); //로드뷰를 표시할 div
+      console.log(this.aptInfo.lat, this.aptInfo.lng);
+      console.log(roadviewContainer);
+      var roadview = new window.kakao.maps.Roadview(roadviewContainer); //로드뷰 객체
+      var roadviewClient = new window.kakao.maps.RoadviewClient(); //좌표로부터 로드뷰 파노ID를 가져올 로드뷰 helper객체
+      var position = new window.kakao.maps.LatLng(this.aptInfo.lat, this.aptInfo.lng);
+
+      // 특정 위치의 좌표와 가까운 로드뷰의 panoId를 추출하여 로드뷰를 띄운다.
+      roadviewClient.getNearestPanoId(position, 150, function (panoId) {
+        roadview.setPanoId(panoId, position); //panoId와 중심좌표를 통해 로드뷰 실행
+      });
+    },
+    loadScript() {
+      const script = document.createElement("script");
+      script.src =
+        "//dapi.kakao.com/v2/maps/sdk.js?appkey=9cfef1fdc8f75accdbe0ced8e6fa2741&autoload=false&libraries=clusterer";
+      script.onload = () => window.kakao.maps.load(this.loadMap);
+      document.head.appendChild(script);
+    },
   },
   created() {
-    // console.log(this.apt);
-    this.aptInfo = this.apt;
-    this.aptInfo.id = this.userInfo.id;
-    // this.apt["id"] = this.userInfo.id;
-    http.post("/apt/detailAptList", this.aptInfo).then((data) => {
-      console.log(data.data);
-      this.isLike = data.data.like;
-      this.deal = data.data.list;
-      this.aptInfo = data.data.list[0];
-      console.log(this.deal);
-    });
+    // console.log("사이드 바에서 아파트 정보", this.apt);
+    // this.aptInfo = this.apt;
+    // this.aptInfo.id = this.userInfo.id;
+    // // this.apt["id"] = this.userInfo.id;
+    // http.post("/apt/detailAptList", this.aptInfo).then((data) => {
+    //   console.log(data.data);
+    //   this.isLike = data.data.like;
+    //   this.deal = data.data.list;
+    //   this.aptInfo = data.data.list[0];
+    //   this.chartInfo = data.data.arrAmount;
+    //   console.log(this.deal);
+    // });
+  },
+  mounted() {
+    if (window.kakao && window.kakao.maps) {
+      this.loadView();
+    } else {
+      this.loadScript();
+    }
   },
 };
 </script>
@@ -196,13 +218,21 @@ export default {
   height: 400px;
 }
 
-.close-side-bar img {
+.close-side-bar {
   position: relative;
   top: 30px;
   left: 30px;
-  width: 15px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 5px;
+}
+
+.close-side-bar img {
+  position: relative;
+  top: 3px;
+  left: 6px;
 }
 
 /* 아파트 정보 */
