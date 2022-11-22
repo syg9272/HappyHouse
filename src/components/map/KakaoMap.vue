@@ -34,13 +34,17 @@
         </div>
       </div>
     </div>
-    <map-side v-if="isSide" :isSide="isSide" :apt="apt"></map-side>
+    <map-side v-if="this.isSide"></map-side>
   </main>
 </template>
 <script>
 // import axios from "axios";
 import http from "@/api/http";
 import MapSide from "@/components/map/MapSide.vue";
+import { mapState } from "vuex";
+// import Constant from "../Constant";
+
+const mapStore = "mapStore";
 // import $ from "jquery";
 export default {
   name: "KakaoMap",
@@ -58,10 +62,6 @@ export default {
       dong: null,
       searchImg: require("../../assets/img/search.png"),
 
-      // 자식 컴포넌트에게 전달할 apt 상세데이터
-      apt: null,
-
-      isSide: false,
       aptList: [],
     };
   },
@@ -69,13 +69,14 @@ export default {
     if (this.$route.params.aptCode != null) {
       console.log("!!!!!!!! 사이드바 열어");
       console.log(this.$route.params);
-      this.apt = {
+      var info = {
         aptCode: this.$route.params.aptCode,
         dongCode: this.$route.params.dongCode,
         apartmentName: this.$route.params.apartmentName,
       };
-      console.log(this.apt);
-      this.isSide = true;
+      console.log("infoo!!!!!!!!!", info);
+      this.$store.commit("mapStore/SET_APT", info);
+      this.$store.commit("mapStore/SET_IS_SIDE");
     }
     // this.underFive();
     if (this.$route.params.dong != null) {
@@ -100,6 +101,10 @@ export default {
           });
         });
     }
+  },
+  computed: {
+    ...mapState(mapStore, ["apt"]),
+    ...mapState(mapStore, ["isSide"]),
   },
   watch: {
     level(level) {
@@ -145,10 +150,10 @@ export default {
   },
   methods: {
     updateParent() {
-      this.isSide = !this.isSide;
+      this.$store.commit("mapStore/SET_IS_SIDE");
     },
     searchMap() {
-      this.isSide = !this.isSide;
+      this.$store.commit("mapStore/SET_IS_SIDE");
     },
     findLocation(e) {
       this.dong = e.target.value;
@@ -159,36 +164,19 @@ export default {
           },
         })
         .then((data) => {
-          console.log(data.data);
           this.aptList = data.data;
-          console.log(this.aptList);
         });
     },
-    // moveDetail(data1, data2) {
-    //   console.log(data1, data2, "movemove!!!!!!!!!");
-    // },
     searchDongCode(index) {
-      // console.log("!!!!!!!!!!!!!!!!!");
-      // console.log(index);
       http.post("/apt/selectAptList", this.aptList[index]).then((data) => {
-        console.log(data.data);
         this.lng = data.data[0].lng;
         this.lat = data.data[0].lat;
-        // this.aptList = data.data;
-        console.log(this.aptList);
       });
     },
     searchDongCodeAll() {
-      console.log(this.aptList[0]);
-      // this.dong = e.target.value;
       http.post("/apt/selectAptList", this.aptList[0]).then((data) => {
-        console.log(data.data);
         this.lng = data.data[0].lng;
         this.lat = data.data[0].lat;
-        // this.aptList = data.data;
-        console.log(this.aptList);
-        // document.getElementsByClassName("map-search")[0].style.visibility = "hidden";
-        // document.getElementsByClassName("location-search")[0].style.borderRadius = "10px";
       });
     },
     loadScript() {
@@ -205,7 +193,6 @@ export default {
           lat: this.lat,
         })
         .then((res) => {
-          console.log(res);
           this.markerPositions = res.data;
         });
       const container = document.getElementById("map");
@@ -246,15 +233,9 @@ export default {
           clickable: true,
         });
         window.kakao.maps.event.addListener(marker, "click", () => {
-          console.log(this.markerPositions[i]);
-          this.apt = this.markerPositions[i];
-          console.log(this.apt);
-          this.isSide = !this.isSide;
-          // http.post("/apt/")
+          this.$store.commit("mapStore/SET_APT", this.markerPositions[i]);
+          this.$store.commit("mapStore/SET_IS_SIDE");
         });
-        // window.kakao.maps.event.addListener(this.marker, "click", () => {
-        //   console.log(this.marker);
-        // });
         const maxAmount = Number(this.markerPositions[i].maxAmount.substr(0, 3));
         const priceAbove40 = "#191D45";
         const priceAbove20 = "#4C549C";
@@ -308,22 +289,15 @@ export default {
 
       if (this.level > 10) {
         await http.get("/apt/selectSidoList").then((res) => {
-          console.log(res);
           this.markerPositions = res.data;
         });
         for (let i = 0; i < this.markerPositions.length; i++) {
-          // console.log(this.markerPositions[i]);
           let lat = this.markerPositions[i].lat;
           let lng = this.markerPositions[i].lng;
           let marker = new window.kakao.maps.Marker({
             map: this.map,
             position: new window.kakao.maps.LatLng(lat, lng),
           });
-          // window.kakao.maps.event.addListener(this.marker, "click", function () {
-          //   // 마커 위에 인포윈도우를 표시합니다
-          //   // infowindow.open(map, marker);
-          //   console.log(this.marker);
-          // });
           let price = `<div className="label" style="padding:10px; background-color: #4C549C; border-radius:20px; text-align:center;">
                                         <div className="column-title" style="font-size: 15px; color:white; text-align:center;">
                                              ${this.markerPositions[i].sidoName}
@@ -345,11 +319,9 @@ export default {
             lat: this.lat,
           })
           .then((res) => {
-            console.log(res);
             this.markerPositions = res.data;
           });
         for (let i = 0; i < this.markerPositions.length; i++) {
-          // console.log(this.markerPositions[i]);
           let lat = this.markerPositions[i].lat;
           let lng = this.markerPositions[i].lng;
           let marker = new window.kakao.maps.Marker({
@@ -377,7 +349,6 @@ export default {
             lat: this.lat,
           })
           .then((res) => {
-            console.log(res);
             this.markerPositions = res.data;
           });
         for (let i = 0; i < this.markerPositions.length; i++) {
@@ -387,9 +358,6 @@ export default {
             map: this.map,
             position: new window.kakao.maps.LatLng(lat, lng),
           });
-          // window.kakao.maps.event.addListener(this.marker, "click", function () {
-          //   console.log(this.marker);
-          // });
           let price = `<div className="label" style="padding:10px; background-color: #4C549C; border-radius:20px; text-align:center;">
                                         <div className="column-title" style="font-size: 15px; color:white; text-align:center;">
                                              ${this.markerPositions[i].dong}
@@ -411,7 +379,6 @@ export default {
             lat: this.lng,
           })
           .then((res) => {
-            console.log(res);
             this.markerPositions = res.data;
           });
 
@@ -419,11 +386,6 @@ export default {
           let getLevel = this.map.getLevel();
           this.level = getLevel;
         });
-        // window.kakao.maps.event.addListener(this.marker, "click", function () {
-        //   // 마커 위에 인포윈도우를 표시합니다
-        //   // infowindow.open(map, marker);
-        //   console.log(this.marker);
-        // });
         // 마커 이미지의 이미지 주소입니다
         var imageSrc = require("@/assets/img/apt.png");
         // 마커 이미지의 이미지 크기 입니다

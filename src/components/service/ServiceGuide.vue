@@ -27,7 +27,73 @@
           <div class="guide-menu">실거래가 조회</div>
           <div>
             <img class="guide-img" :src="guideImg" alt="guide-1" />
-            <img class="guide-map-img" :src="mapImg" alt="map" />
+            <div class="page-img-div">
+              <div>
+                <img class="page-img" :src="mapImg" alt="map" />
+                <div>
+                  <div class="guide-title">넓은 지도 화면에 강력한 검색 필터 기능</div>
+                  <div class="guide-text">넓은 지도 화면에 강력한 검색 기능</div>
+                </div>
+              </div>
+              <div>
+                <img class="page-img" :src="mapSearch" alt="map" />
+                <div>
+                  <div class="guide-title">아파트 전체 매물 검색</div>
+                  <div class="guide-text">
+                    아파트 부동산 전체 매물을 누구나 쉽고 빠르게 검색할 수 있습니다.
+                  </div>
+                </div>
+              </div>
+              <div>
+                <img class="page-img" :src="mapSideBar" alt="map" />
+                <div>
+                  <div class="guide-title">학군 및 아파트 매물 정보를 한눈에 확인</div>
+                  <div class="guide-text">
+                    매물과 함께 공공데이터 기반의 학군(초 · 중 · 고)과 주변 인프라 정보를 함께
+                    확인할 수 있습니다.
+                  </div>
+                </div>
+              </div>
+              <div>
+                <img class="page-img" :src="mapChart" alt="map" />
+                <div>
+                  <div class="guide-title">시세/실거래가, 상세한 거래정보</div>
+                  <div class="guide-text">
+                    아파트 매물에 대한 시세/실거래가 정보와 기타 거래 정보를 매물 기본 정보와 함께
+                    제공해 드립니다.
+                  </div>
+                </div>
+              </div>
+              <!-- <img class="page-img" :src="mapImg" alt="map" /> -->
+              <!-- <img class="page-img" :src="mapImg" alt="map" /> -->
+            </div>
+          </div>
+        </div>
+
+        <div class="guide-list">
+          <div class="guide-menu">관심목록 조회</div>
+          <div>
+            <img class="guide-img" :src="likeImg" alt="guide-1" />
+            <div class="page-img-div">
+              <div>
+                <img class="page-img" :src="likeList" alt="map" />
+                <div>
+                  <div class="guide-title">넓은 지도 화면에 강력한 검색 필터 기능</div>
+                  <div class="guide-text">넓은 지도 화면에 강력한 검색 기능</div>
+                </div>
+              </div>
+              <div>
+                <img class="page-img" :src="likeMove" alt="map" />
+                <div>
+                  <div class="guide-title">아파트 전체 매물 검색</div>
+                  <div class="guide-text">
+                    아파트 부동산 전체 매물을 누구나 쉽고 빠르게 검색할 수 있습니다.
+                  </div>
+                </div>
+              </div>
+              <!-- <img class="page-img" :src="mapImg" alt="map" /> -->
+              <!-- <img class="page-img" :src="mapImg" alt="map" /> -->
+            </div>
           </div>
         </div>
       </div>
@@ -36,14 +102,18 @@
 </template>
 
 <script>
-// import http from "@/api/http";
-
 export default {
   name: "ServiceGuide",
   data() {
     return {
       guideImg: require("../../assets/img/guide-1.png"),
-      mapImg: require("../../assets/img/map.png"),
+      mapImg: require("../../assets/img/map-main.png"),
+      mapSearch: require("../../assets/img/map-search.png"),
+      mapSideBar: require("../../assets/img/map-sideBar.png"),
+      mapChart: require("../../assets/img/map-chart.png"),
+      likeImg: require("../../assets/img/like-guide.png"),
+      likeList: require("../../assets/img/like-list.png"),
+      likeMove: require("../../assets/img/like-move.png"),
     };
   },
 };
@@ -96,6 +166,10 @@ export default {
   color: black;
 }
 
+.notice .guide-list {
+  margin-bottom: 70px;
+}
+
 /* notice item list */
 .notice .guide-area {
   display: flex;
@@ -134,9 +208,6 @@ export default {
 .notice .guide-area .guide-list {
   display: flex;
   flex-direction: column;
-  /* text-align: left; */
-  /* justify-content: center; */
-  /* align-items: center; */
   width: 55%;
 }
 
@@ -155,9 +226,41 @@ export default {
   margin: 30px auto;
 }
 
-.notice .guide-area .guide-map-img {
+.notice .guide-area .page-img-div {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.notice .guide-area .page-img-div > div {
+  width: 45%;
+  margin: 10px auto;
+}
+
+.notice .guide-area .page-img-div > div > div {
+  padding: 20px;
+}
+
+.notice .guide-area .page-img-div > div > div .guide-title {
+  color: #2475d0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.notice .guide-area .page-img-div > div > div .guide-text {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.notice .guide-area .page-img {
   width: 100%;
   object-fit: cover;
-  margin: 20px 0 50px 0;
+  border-radius: 10px;
+  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 1);
+}
+
+.notice .guide-area .page-img-div > div:hover {
+  transform: scale(105%);
 }
 </style>

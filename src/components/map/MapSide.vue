@@ -1,7 +1,8 @@
 <template>
-  <div class="side-bar" v-if="side">
+  <div class="side-bar" v-if="this.isSide">
     <div>
-      <div id="roadview" class="apt-img"></div>
+      <!-- <div id="roadview" class="apt-img"></div> -->
+      <map-load-view :aptInfo="aptInfo"></map-load-view>
       <div class="close-side-bar">
         <img @click="closeSide()" src="@/assets/img/close-side-bar.png" alt="close-side-bar" />
       </div>
@@ -80,7 +81,7 @@
           </tbody>
         </table>
       </div>
-      <map-chart></map-chart>
+      <map-chart :apt="apt"></map-chart>
     </div>
   </div>
 </template>
@@ -90,21 +91,19 @@ import http from "@/api/http";
 import { mapState } from "vuex";
 
 import MapChart from "@/components/map/MapChart.vue";
+import MapLoadView from "@/components/map/MapLoadView.vue";
 
 const memberStore = "memberStore";
+const mapStore = "mapStore";
 
 export default {
   name: "MapSide",
-  props: {
-    isSide: Boolean,
-    apt: Object,
-  },
   components: {
     MapChart,
+    MapLoadView,
   },
   data() {
     return {
-      side: this.isSide,
       aptInfo: null,
       deal: null,
       isLike: false,
@@ -113,10 +112,14 @@ export default {
   },
   computed: {
     ...mapState(memberStore, ["userInfo"]),
+    ...mapState(mapStore, ["apt"]),
+    ...mapState(mapStore, ["isSide"]),
+    ...mapState(mapStore, ["year"]),
+    ...mapState(mapStore, ["avgAmount"]),
   },
   methods: {
     closeSide() {
-      this.side = !this.side;
+      this.$store.commit("mapStore/SET_IS_SIDE");
       this.$emit("updateParent");
     },
     insertLike() {
@@ -143,57 +146,21 @@ export default {
           });
       }
     },
-    async loadView() {
-      this.aptInfo = this.apt;
-      this.aptInfo.id = this.userInfo.id;
-      await http.post("/apt/detailAptList", this.aptInfo).then((data) => {
-        console.log(data.data);
-        this.isLike = data.data.like;
-        this.deal = data.data.list;
-        this.aptInfo = data.data.list[0];
-        console.log(this.deal);
-        // console.log(this.aptInfo.lat
-      });
-      var roadviewContainer = document.getElementById("roadview"); //로드뷰를 표시할 div
-      console.log(this.aptInfo.lat, this.aptInfo.lng);
-      console.log(roadviewContainer);
-      var roadview = new window.kakao.maps.Roadview(roadviewContainer); //로드뷰 객체
-      var roadviewClient = new window.kakao.maps.RoadviewClient(); //좌표로부터 로드뷰 파노ID를 가져올 로드뷰 helper객체
-      var position = new window.kakao.maps.LatLng(this.aptInfo.lat, this.aptInfo.lng);
-
-      // 특정 위치의 좌표와 가까운 로드뷰의 panoId를 추출하여 로드뷰를 띄운다.
-      roadviewClient.getNearestPanoId(position, 150, function (panoId) {
-        roadview.setPanoId(panoId, position); //panoId와 중심좌표를 통해 로드뷰 실행
-      });
-    },
-    loadScript() {
-      const script = document.createElement("script");
-      script.src =
-        "//dapi.kakao.com/v2/maps/sdk.js?appkey=9cfef1fdc8f75accdbe0ced8e6fa2741&autoload=false&libraries=clusterer";
-      script.onload = () => window.kakao.maps.load(this.loadMap);
-      document.head.appendChild(script);
-    },
   },
-  created() {
-    // console.log("사이드 바에서 아파트 정보", this.apt);
-    // this.aptInfo = this.apt;
-    // this.aptInfo.id = this.userInfo.id;
-    // // this.apt["id"] = this.userInfo.id;
-    // http.post("/apt/detailAptList", this.aptInfo).then((data) => {
-    //   console.log(data.data);
-    //   this.isLike = data.data.like;
-    //   this.deal = data.data.list;
-    //   this.aptInfo = data.data.list[0];
-    //   this.chartInfo = data.data.arrAmount;
-    //   console.log(this.deal);
-    // });
-  },
-  mounted() {
-    if (window.kakao && window.kakao.maps) {
-      this.loadView();
-    } else {
-      this.loadScript();
-    }
+  async created() {
+    this.aptInfo = this.apt;
+    this.aptInfo.id = this.userInfo.id;
+    await http.post("/apt/detailAptList", this.aptInfo).then((data) => {
+      console.log("디테일 정보 ~!~!~!~!", data.data);
+      console.log("디테일 정보 ~!~!~!~!", data.data.avgList);
+      this.$store.commit("mapStore/SET_YEAR", data.data.year);
+      this.$store.commit("mapStore/SET_AVG_AMOUNT", data.data.avgAmount);
+      this.isLike = data.data.like;
+      this.deal = data.data.list;
+      this.aptInfo = data.data.list[0];
+      console.log(this.deal);
+    });
+    console.log("아파트 정보 ~!!!!", this.aptInfo);
   },
 };
 </script>

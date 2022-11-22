@@ -51,6 +51,7 @@ const routes = [
   {
     path: "/like",
     name: "like",
+    beforeEnter: onlyAuthUser,
     component: AppLike,
   },
   {

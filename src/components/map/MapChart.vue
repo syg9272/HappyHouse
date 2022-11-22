@@ -3,61 +3,62 @@
 </template>
 
 <script>
-// 1. Import Chart.js so you can use the global Chart object
-// import { Chart } from "chart.js";
-// 2. Import the `generateChart()` method to create the vue component.
-// import { generateChart } from "vue-chartjs";
-// 3. Import needed controller from Chart.js
-// import { LineController } from "chart.js";
+import { mapState } from "vuex";
 
-// export default {
-//   extends: Line,
-//   name: "MapChart",
-// };
+const mapStore = "mapStore";
 
-// import "@/utils/charts/global";
-// import { Line } from "~/vue-chartjs-3.5.1/src/index";
 import { Chart, registerables } from "chart.js";
 Chart.register(...registerables);
 
 export default {
   name: "MapChart",
-  data: () => ({
-    type: "line",
-    data: {
-      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-      datasets: [
-        {
-          label: "# of Votes",
-          data: [12, 19, 3, 5, 2, 3],
-          backgroundColor: [
-            "rgba(255, 99, 132, 0.2)",
-            "rgba(54, 162, 235, 0.2)",
-            "rgba(255, 206, 86, 0.2)",
-            "rgba(75, 192, 192, 0.2)",
-            "rgba(153, 102, 255, 0.2)",
-            "rgba(255, 159, 64, 0.2)",
-          ],
-          borderColor: [
-            "rgba(255, 99, 132, 1)",
-            "rgba(54, 162, 235, 1)",
-            "rgba(255, 206, 86, 1)",
-            "rgba(75, 192, 192, 1)",
-            "rgba(153, 102, 255, 1)",
-            "rgba(255, 159, 64, 1)",
-          ],
-          borderWidth: 1,
-        },
-      ],
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true,
+  data() {
+    return {
+      type: "line",
+      data: {
+        labels: [],
+        datasets: [
+          {
+            label: "해당 년도 평균 거래금액",
+            data: [],
+            backgroundColor: ["rgba(10, 17, 81, 1)"],
+            borderColor: ["rgba(10, 17, 81, 1)"],
+          },
+        ],
+      },
+      options: {
+        responsive: false,
+        scales: {
+          y: {
+            ticks: {
+              min: null,
+              callback: function (value) {
+                return value.toLocaleString("ko-KR") + " 억";
+              },
+            },
+          },
         },
       },
-    },
-  }),
+    };
+  },
+  computed: {
+    ...mapState(mapStore, ["apt"]),
+    ...mapState(mapStore, ["avgAmount"]),
+    ...mapState(mapStore, ["year"]),
+  },
+  created() {
+    this.data.labels = this.year;
+    this.data.datasets[0].data = this.avgAmount;
+
+    var maxAvg = 0;
+    var minAvg = 100;
+    for (let index = 0; index < this.avgAmount.length; index++) {
+      const element = this.avgAmount[index];
+      maxAvg = maxAvg < element ? element : maxAvg;
+      minAvg = minAvg > element ? element : minAvg;
+    }
+    this.options.scales.y.ticks.min = minAvg;
+  },
   mounted() {
     this.createChart();
   },
@@ -72,3 +73,9 @@ export default {
   },
 };
 </script>
+
+<style>
+canvas {
+  padding: 15px;
+}
+</style>
