@@ -234,7 +234,7 @@ export default {
         centeredSlides: true,
         loop: true,
         autoplay: {
-          delay: 5000, // 5초
+          delay: 3000, // 3초
         },
         pagination: {
           el: ".swiper-pagination",

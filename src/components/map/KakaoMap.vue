@@ -55,6 +55,7 @@ export default {
     return {
       map: null,
       markerPositions: [],
+      bbang: [],
       markers: [],
       level: 2,
       lng: "127.028461",
@@ -270,6 +271,56 @@ export default {
 
         customOverlayTitle.setMap(this.map);
         customOverlayPrice.setMap(this.map);
+      }
+      await http.get("/apt/selectBbang").then((res) => {
+        this.bbang = res.data;
+      });
+      console.log(this.bbang);
+      var img = require("@/assets/img/bbang.png");
+      // 마커 이미지의 이미지 크기 입니다
+      var imgSize = new window.kakao.maps.Size(40, 40);
+      var markerImg = new window.kakao.maps.MarkerImage(img, imgSize);
+
+      // var iwContent =
+      //     '<iframe width="560" height="315" src="https://www.youtube.com/embed/sgQyMzX43y0?start=47" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+      // var iwContent = '<div style="padding:5px;">Hello World!</div>',
+      //   iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
+
+      // // 인포윈도우를 생성합니다
+      // var infowindow = new window.kakao.maps.InfoWindow({
+      //   content: iwContent,
+      //   removable: iwRemoveable,
+      // });
+
+      // 마커에 클릭이벤트를 등록합니다
+
+      for (let i = 0; i < this.bbang.length; i++) {
+        let lat = this.bbang[i].lat;
+        let lng = this.bbang[i].lng;
+        let mark = new window.kakao.maps.Marker({
+          map: this.map,
+          position: new window.kakao.maps.LatLng(lat, lng),
+          image: markerImg,
+          clickable: true,
+        });
+        // mark.setMap(this.map);
+        var iwContent =
+            '<iframe width="560" height="315" src="https://www.youtube.com/embed/sgQyMzX43y0?start=47&autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+          iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
+
+        // 인포윈도우를 생성합니다
+        var infowindow = new window.kakao.maps.InfoWindow({
+          position: new window.kakao.maps.LatLng(lat, lng),
+          content: iwContent,
+          removable: iwRemoveable,
+        });
+        // infowindow.open(this.map, mark);
+        window.kakao.maps.event.addListener(mark, "click", () => {
+          console.log("!!!!!!!!!!!!!");
+          console.log(infowindow);
+          // 마커 위에 인포윈도우를 표시합니다
+          infowindow.open(this.map, mark);
+        });
       }
       this.map.relayout();
     },
