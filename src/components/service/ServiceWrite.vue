@@ -17,7 +17,7 @@
           <textarea v-model="article.content" />
         </div>
         <div class="view-file">
-          <div>첨부파일 ({{ article.fileInfos.length }})</div>
+          <div>첨부파일 ({{ fileInfos.length }})</div>
           <div class="file-list">
             <a href="#"
               ><input value="파일" type="file" @change="changeFile" multiple="multiple"
@@ -48,8 +48,8 @@ export default {
         id: "admin",
         subject: null,
         content: null,
-        fileInfos: [],
       },
+      fileInfos: [],
     };
   },
   methods: {
@@ -58,14 +58,18 @@ export default {
     },
     registArticle() {
       console.log(this.article);
-      http.post("/notice/register", this.article).then((data) => {
+      var vo = {
+        notice: this.article,
+        upfile: this.fileInfos,
+      };
+      http.post("/notice/register", vo).then((data) => {
         console.log(data);
         this.$router.push({ name: "servicenotice" });
       });
     },
     changeFile(e) {
       console.log(e.target.files);
-      this.article.fileInfos = e.target.files;
+      this.fileInfos = e.target.files;
     },
   },
   created() {},

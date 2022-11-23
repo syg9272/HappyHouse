@@ -102,7 +102,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .mypage {
   width: 400px;
   min-height: 500px;
