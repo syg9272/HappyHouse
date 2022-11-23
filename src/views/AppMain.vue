@@ -126,61 +126,26 @@
             </div>
           </div> -->
         </div>
-        <div class="swiper-page">
-          <div class="swiper-prev">
-            <img src="@/assets/img/swiper-prev.png" alt="prev" />
-          </div>
-          <div class="swiper-next">
-            <img src="@/assets/img/swiper-next.png" alt="next" />
-          </div>
-        </div>
       </div>
 
-      <!-- <div class="notice-bar">
+      <div class="notice-bar">
         <h2>NOTICE</h2>
-        <div class="swiper-container">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide">
-              <a href="javascript:void(0)">버전 업데이트와 시스템 개선 및 점검 안내 </a>
-            </div>
-            <div class="swiper-slide">
-              <a href="javascript:void(0)">[이벤트] 2022 이벤트</a>
-            </div>
-            <div class="swiper-slide">
-              <a href="javascript:void(0)">애플리케이션 버전 업데이트 안내</a>
-            </div>
-            <div class="swiper-slide">
-              <a href="javascript:void(0)">시스템 개선 및 점검 안내 </a>
-            </div>
-          </div>
-        </div>
-      </div> -->
+        <the-notice></the-notice>
+      </div>
     </div>
   </main>
 </template>
 
 <script>
-// @ is an alias to /src
-// import HelloWorld from "@/components/HelloWorld.vue";
-// import Swiper from "@/components/common/TheSwiper.vue";
-
-// import { Swiper, SwiperSlide } from "vue-awesome-swiper";
-// import "swiper/css/swiper.css";
-
-// export default {
-// 	name: "slider",
-// 	components:	{
-//        Swiper,
-//        SwiperSlide
-// 	},
-// }
 import http from "@/api/http";
 import TheSwiper from "@/components/common/TheSwiper.vue";
+import TheNotice from "@/components/common/TheNotice.vue";
 
 export default {
   name: "AppMain",
   components: {
     TheSwiper,
+    TheNotice,
   },
   data() {
     return {
@@ -224,18 +189,6 @@ export default {
         name: "map",
         params: {
           dong: this.dong,
-        },
-      });
-    },
-    moveApt(aptCode, dongCode, dong, apartmentName) {
-      console.log(aptCode, dongCode, dong);
-      this.$router.push({
-        name: "map",
-        params: {
-          aptCode,
-          dongCode,
-          dong,
-          apartmentName,
         },
       });
     },
@@ -340,7 +293,6 @@ export default {
 
 .main > div {
   margin: 80px;
-  min-height: 300px;
 }
 
 .main .title {
@@ -395,7 +347,7 @@ export default {
 }
 
 /* notice */
-/* .notice-bar {
+.notice-bar {
   margin: 50px 0 !important;
   width: 100%;
   padding: 20px 0;
@@ -409,23 +361,6 @@ export default {
   font-size: 20px;
   font-weight: bold;
 }
-.notice-bar .swiper-container {
-  height: 50px;
-  flex-grow: 1;
-}
-.notice-bar .swiper-container .swiper-slide {
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.notice-bar .swiper-container .swiper-slide a {
-  color: #0a1151;
-}
-
-.notice-bar .swiper-container .swiper-slide a:hover {
-  text-decoration: underline;
-} */
 
 .main .recent-deal-list,
 .main .hot-list {
