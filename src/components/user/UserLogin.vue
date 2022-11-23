@@ -40,7 +40,7 @@
 <script>
 // import axios from "axios";
 // import http from "@/api/http";
-
+import Cookies from "js-cookie";
 import { mapState, mapActions } from "vuex";
 
 const memberStore = "memberStore";
@@ -59,7 +59,11 @@ export default {
     };
   },
   created() {
-    // if(this.userInfo.saveid == )
+    if (Cookies.get("userId") != null) {
+      this.user.id = Cookies.get("userId");
+      this.user.saveid = "true";
+      this.checkedValues = true;
+    }
   },
   computed: {
     ...mapState(memberStore, ["isLogin", "isLoginError", "userInfo"]),
@@ -92,6 +96,10 @@ export default {
       // console.log("1. confirm() token >> " + token);
       if (this.isLogin) {
         await this.getUserInfo(token);
+        console.log(this.user.saveid);
+        if (this.checkedValues == "true") Cookies.set("userId", this.user.id, { expires: 7 });
+        else Cookies.remove("userId");
+
         // console.log("4. confirm() userInfo :: ", this.userInfo);
         this.$router.push({ name: "main" });
       }

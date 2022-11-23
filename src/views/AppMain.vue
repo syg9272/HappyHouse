@@ -16,7 +16,6 @@
         </div>
         <div>
           <button @click="moveMap()" class="btn-show-more">Show more</button>
-          <!-- <button class="btn-hot-item">Hot item</button> -->
         </div>
       </div>
 
@@ -25,92 +24,114 @@
           <div class="content-title">Hot Area</div>
           <div class="line"></div>
         </div>
-        <div class="recent-deal-list">
-          <div class="hot-area-item area-a swiper-slide">
+        <div class="hot-list">
+          <div @click="viewMap(0)" class="hot-area-item area-a">
             <div>
-              <div class="apt-name">000 아파트</div>
-              <div>
+              <div class="apt apt-name">{{ dongRank[0].dong }}</div>
+              <div class="apt">
                 <div class="material-icons">house</div>
-                <div>부산광역시 중구 영주동 92</div>
+                <div>
+                  {{ dongRank[0].sidoName + " " + dongRank[0].gugunName + " " + dongRank[0].dong }}
+                </div>
+              </div>
+              <div class="move-map">
+                <div class="move-map-link">View Map</div>
               </div>
             </div>
           </div>
-          <div class="hot-area-item area-b swiper-slide">
+          <div @click="viewMap(1)" class="hot-area-item area-b">
             <div>
-              <div class="apt-name">000 아파트</div>
-              <div>
+              <div class="apt apt-name">{{ dongRank[1].dong }}</div>
+              <div class="apt">
                 <div class="material-icons">house</div>
-                <div>부산광역시 중구 영주동 92</div>
+                <div>
+                  {{ dongRank[1].sidoName + " " + dongRank[1].gugunName + " " + dongRank[1].dong }}
+                </div>
+              </div>
+              <div class="move-map">
+                <div class="move-map-link">View Map</div>
               </div>
             </div>
           </div>
-          <div class="hot-area-item area-c swiper-slide">
+          <div @click="viewMap(2)" class="hot-area-item area-c">
             <div>
-              <div class="apt-name">000 아파트</div>
-              <div>
+              <div class="apt apt-name">{{ dongRank[2].dong }}</div>
+              <div class="apt">
                 <div class="material-icons">house</div>
-                <div>부산광역시 중구 영주동 92</div>
+                <div>
+                  {{ dongRank[2].sidoName + " " + dongRank[2].gugunName + " " + dongRank[2].dong }}
+                </div>
+              </div>
+              <div class="move-map">
+                <div class="move-map-link">View Map</div>
               </div>
             </div>
           </div>
-          <div class="hot-area-item area-d swiper-slide">
+          <div @click="viewMap(3)" class="hot-area-item area-d">
             <div>
-              <div class="apt-name">000 아파트</div>
-              <div>
+              <div class="apt apt-name">{{ dongRank[3].dong }}</div>
+              <div class="apt">
                 <div class="material-icons">house</div>
-                <div>부산광역시 중구 영주동 92</div>
+                <div>
+                  {{ dongRank[3].sidoName + " " + dongRank[3].gugunName + " " + dongRank[3].dong }}
+                </div>
+              </div>
+              <div class="move-map">
+                <div class="move-map-link">View Map</div>
               </div>
             </div>
           </div>
-          <div class="hot-area-item area-e swiper-slide">
+          <div @click="viewMap(4)" class="hot-area-item area-e">
             <div>
-              <div class="apt-name">000 아파트</div>
-              <div>
+              <div class="apt apt-name">{{ dongRank[4].dong }}</div>
+              <div class="apt">
                 <div class="material-icons">house</div>
-                <div>부산광역시 중구 영주동 92</div>
+                <div>
+                  {{ dongRank[4].sidoName + " " + dongRank[4].gugunName + " " + dongRank[4].dong }}
+                </div>
+              </div>
+              <div class="move-map">
+                <div class="move-map-link">View Map</div>
               </div>
             </div>
           </div>
-          <!-- <div class="swiper-page">
-            <div class="swiper-prev">
-              <img src="@/assets/img/swiper-prev.png" alt="prev" />
-            </div>
-            <div class="swiper-next">
-              <img src="@/assets/img/swiper-next.png" alt="next" />
-            </div>
-          </div> -->
         </div>
       </div>
-
       <div class="recent-deal">
         <div class="title">
           <div class="line"></div>
           <div class="content-title">recent deal</div>
         </div>
         <div class="recent-deal-list">
-          <div class="swiper-slide">
-            <img :src="aptImg" alt="recent-deal-apt" />
+          <the-swiper :aptRank="aptRank"></the-swiper>
+          <!-- <div v-for="(item, index) in aptRank" :key="index" :aptRank="aptRank" class="deal-item">
+            <img :src="aptImg[index]" alt="recent-deal-apt" />
             <div>
-              <div class="apt-name">000 아파트</div>
-              <div>대전광역시 대종로505번길 59</div>
-              <a href="javascript:void(0)" class="move-apt">자세히 보기</a>
+              <div class="apt-name">{{ item.apartmentName + " 아파트" }}</div>
+              <div>
+                <img class="apt-like-icon" src="@/assets/img/apt-icon.png" alt="apt-info" />
+                <div>
+                  {{ item.sidoName + " " + item.gugunName + " " + item.dong + " " + item.jibun }}
+                </div>
+              </div>
+              <div>
+                <a
+                  @click.prevent="
+                    moveApt(item.aptCode, item.dongCode, item.dong, item.apartmentName)
+                  "
+                  ><img class="apt-like-icon" src="@/assets/img/plus.png" alt="move-apt" />아파트
+                  보러가기</a
+                >
+              </div>
             </div>
+          </div> -->
+        </div>
+        <div class="swiper-page">
+          <div class="swiper-prev">
+            <img src="@/assets/img/swiper-prev.png" alt="prev" />
           </div>
-          <div class="swiper-slide">
-            <img :src="aptImg" alt="recent-deal-apt" />
-            <div>
-              <div class="apt-name">000 아파트</div>
-              <div>대전광역시 대종로505번길 59</div>
-              <a href="javascript:void(0)" class="move-apt">자세히 보기</a>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <img :src="aptImg" alt="recent-deal-apt" />
-            <div>
-              <div class="apt-name">000 아파트</div>
-              <div>대전광역시 대종로505번길 59</div>
-              <a href="javascript:void(0)" class="move-apt">자세히 보기</a>
-            </div>
+          <div class="swiper-next">
+            <img src="@/assets/img/swiper-next.png" alt="next" />
           </div>
         </div>
       </div>
@@ -153,18 +174,47 @@
 //        SwiperSlide
 // 	},
 // }
+import http from "@/api/http";
+import TheSwiper from "@/components/common/TheSwiper.vue";
 
 export default {
   name: "AppMain",
+  components: {
+    TheSwiper,
+  },
   data() {
     return {
-      aptImg: require("../assets/img/apt2.jpg"),
+      aptImg: [
+        require("@/assets/img/apt1.png"),
+        require("@/assets/img/apt2.jpg"),
+        require("@/assets/img/apt3.jpg"),
+        require("@/assets/img/apt4.jpg"),
+        require("@/assets/img/apt5.jpg"),
+        require("@/assets/img/apt6.jpg"),
+        require("@/assets/img/apt7.jpg"),
+        require("@/assets/img/apt8.jpg"),
+        require("@/assets/img/apt9.jpg"),
+        require("@/assets/img/apt10.jpg"),
+        require("@/assets/img/apt11.jpg"),
+        require("@/assets/img/apt12.jpg"),
+        require("@/assets/img/apt13.jpg"),
+      ],
       dong: null,
+      dongRank: null,
+      aptRank: null,
     };
   },
   methods: {
     moveMap() {
       this.$router.push({ name: "map" });
+    },
+    viewMap(index) {
+      this.$router.push({
+        name: "map",
+        params: {
+          dong: this.dongRank[index].dong,
+        },
+      });
     },
     changeDong(e) {
       this.dong = e.target.value;
@@ -177,72 +227,34 @@ export default {
         },
       });
     },
+    moveApt(aptCode, dongCode, dong, apartmentName) {
+      console.log(aptCode, dongCode, dong);
+      this.$router.push({
+        name: "map",
+        params: {
+          aptCode,
+          dongCode,
+          dong,
+          apartmentName,
+        },
+      });
+    },
+  },
+  created() {
+    http.get("/apt/selectDongRankList").then((data) => {
+      console.log("동 랭킹", data.data);
+      this.dongRank = data.data;
+    });
+
+    http.get("/apt/selectAptRankList").then((data) => {
+      console.log("아파트 랭킹", data.data);
+      this.aptRank = data.data;
+    });
   },
 };
-
-// new Swiper(선택자, 옵션)
-
-// new Swiper(".notice-bar .swiper-container", {
-//   direction: "vertical",
-//   autoplay: true,
-//   loop: true,
-// });
-
-// new Swiper(".recent-deal .recent-deal-list .swiper-container", {
-//   slidesPerView: 3, //한 번에 보여줄 슬라이드 개수
-//   spaceBetween: 10, //슬라이드 사이 여백
-//   centeredSlides: true, // 1번 슬라이드가 가운데 보이기
-//   loop: true,
-//   autoplay: {
-//     delay: 3000, // 5초
-//   },
-//   pagination: {
-//     el: ".recent-deal .recent-deal-list .swiper-pagination", //페이지 번호 요소 선택자
-//     clickable: true, // 사용자의 페이지 번호 요소 제어 가능 여부
-//   },
-//   navigation: {
-//     // 슬라이드 이전/다음 버튼 사용 여부
-//     prevEl: ".swiper-slide-prev", // 이전 버튼 선택자
-//     nextEl: ".swiper-slide-next", // 다음 버튼 선택자
-//   },
-// });
-
-// new Swiper(".hot-item .recent-deal-list .swiper-container", {
-//   slidesPerView: 3, //한 번에 보여줄 슬라이드 개수
-//   spaceBetween: 10, //슬라이드 사이 여백
-//   centeredSlides: true, // 1번 슬라이드가 가운데 보이기
-//   loop: true,
-//   autoplay: {
-//     delay: 4000, // 5초
-//   },
-//   pagination: {
-//     el: ".hot-item .recent-deal-list .swiper-pagination", //페이지 번호 요소 선택자
-//     clickable: true, // 사용자의 페이지 번호 요소 제어 가능 여부
-//   },
-//   navigation: {
-//     // 슬라이드 이전/다음 버튼 사용 여부
-//     prevEl: ".swiper-prev", // 이전 버튼 선택자
-//     nextEl: ".swiper-next", // 다음 버튼 선택자
-//   },
-// });
-
-//스크롤매직
-// const spyEL1 = document.getElementsByClassName(".hot-item");
-// var tween = TWEENmAX.to(".back-to-position", 0.8, {
-//   fadeInRight: 1,
-// });
-// new ScrollMagic.Scene({
-//   triggerElement: spyEL1, // 보여짐 여부를 감시할 요소를 지정
-//   // triggerHook: 0.8,
-//   duration: "100%",
-// })
-//   // .setClassToggle(spyEL1, "show")
-//   .setTween(tween)
-//   .addTo(new ScrollMagic.Controller())
-//   .addIndicators();
 </script>
 
-<style>
+<style lang="scss">
 /* main page css */
 .main {
   width: 100%;
@@ -328,6 +340,7 @@ export default {
 
 .main > div {
   margin: 80px;
+  min-height: 300px;
 }
 
 .main .title {
@@ -414,7 +427,8 @@ export default {
   text-decoration: underline;
 } */
 
-.main .recent-deal-list {
+.main .recent-deal-list,
+.main .hot-list {
   transition: height 0.4s;
   display: flex;
   flex-direction: row;
@@ -424,17 +438,8 @@ export default {
 .main .recent-deal-list.hide {
   height: 0;
 }
-/* .main .recent-deal-list .swiper-container {
-  width: calc(400px * 3 + 120px);
-  height: 360px;
-  화면 정중앙에 위치시키는 방법
-  position: absolute;
-  padding-top: 30px;
-  top: 30px;
-  left: 50%;
-  margin-left: calc((400px * 3 + 120px) / -2);
-} */
-.main .recent-deal-list .swiper-slide {
+.main .hot-area-item,
+.main .deal-item {
   width: 400px;
   height: 300px;
   opacity: 1;
@@ -447,86 +452,156 @@ export default {
   cursor: pointer;
 }
 
-.main .recent-deal-list .swiper-slide:hover {
+.main .recent-deal-list .deal-item:hover {
   box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
   transform: scale(105%);
   z-index: 1;
 }
 
-.main .hot-item .swiper-slide {
-  /* width: 280px !important; */
-  height: 400px;
+.main .hot-item .hot-area-item {
+  /* height: 400px; */
   background-repeat: no-repeat;
   object-fit: cover;
-  margin: 20px;
+  margin: 10px;
 }
 
-.main .hot-item .recent-deal-list .swiper-slide:hover {
+.main .hot-item .hot-area-item:hover {
   box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
   transform: scale(105%);
   z-index: 1;
-  width: 940px;
 }
 
 .main .hot-item .area-a {
-  width: 450px !important;
-  height: 300px;
-  background-image: url(@/assets/img/apt4.jpg);
+  width: 400px !important;
+  height: 250px;
+  background-image: url(@/assets/img/hot-area-1.jpg);
+  background-size: cover;
+}
+
+.main .hot-item .area-a:hover {
+  background-image: url(@/assets/img/hot-area-1-hover.png);
+  background-size: cover;
 }
 
 .main .hot-item .area-b {
-  width: 450px !important;
-  height: 300px;
-  background-image: url(@/assets/img/apt10.jpg);
+  width: 400px !important;
+  height: 250px;
+  background-image: url(@/assets/img/hot-area-2.jpg);
+  background-size: cover;
+}
+
+.main .hot-item .area-b:hover {
+  background-image: url(@/assets/img/hot-area-2-hover.png);
+  background-size: cover;
 }
 
 .main .hot-item .area-c {
-  width: 450px !important;
-  height: 300px;
-  background-image: url(@/assets/img/apt6.jpg);
+  width: 400px !important;
+  height: 250px;
+  background-image: url(@/assets/img/hot-area-3.jpg);
+  background-size: cover;
+}
+
+.main .hot-item .area-c:hover {
+  background-image: url(@/assets/img/hot-area-3-hover.png);
+  background-size: cover;
 }
 
 .main .hot-item .area-d {
-  width: 940px !important;
-  height: 300px;
-  background-image: url(@/assets/img/apt8.jpg);
+  width: 840px !important;
+  height: 250px;
+  background-image: url(@/assets/img/hot-area-4.png);
+  background-size: cover;
+}
+
+.main .hot-item .area-d:hover {
+  background-image: url(@/assets/img/hot-area-4-hover.png);
+  background-size: cover;
 }
 
 .main .hot-item .area-e {
   width: 400px !important;
-  height: 300px;
-  background-image: url(@/assets/img/apt3.jpg);
+  height: 250px;
+  background-image: url(@/assets/img/hot-area-5.jpg);
+  background-size: cover;
 }
 
-.main .hot-item .swiper-slide .apt-name {
+.main .hot-item .area-e:hover {
+  background-image: url(@/assets/img/hot-area-5-hover.png);
+  background-size: cover;
+}
+
+.main .hot-item .hot-area-item:hover .apt {
+  visibility: hidden;
+}
+
+.main .hot-item .hot-area-item:hover .move-map-link {
+  visibility: visible;
+  z-index: 999;
+}
+
+.main .hot-item .hot-area-item .apt-name {
   font-size: 16px;
+  font-weight: bold;
 }
 
-.main .hot-item .swiper-slide > div {
+.main .hot-item .hot-area-item > div {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 70px;
+  /* height: 70px; */
   font-size: 12px;
   color: white;
+  padding: 20px;
+  z-index: 99;
 }
 
-.main .hot-item .swiper-slide > div .material-icons {
+.main .hot-item .hot-area-item > div .material-icons {
   margin-right: 10px;
 }
 
-.main .hot-item .swiper-slide > div > div {
+.main .hot-item .hot-area-item > div > div {
   color: white;
+  font-size: 14px;
+  display: flex;
+  flex-direction: row;
+  margin: 5px;
 }
 
-.main .recent-deal-list .swiper-slide > img {
+.main .hot-item .move-map {
+  display: flex;
+  flex-direction: column;
+  margin: 20px auto;
+}
+
+.main .hot-item .move-map-link {
+  width: 100px;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  border: 2px solid white;
+  margin: 10px auto;
+  visibility: hidden;
+}
+
+// .main .recent-deal-list .deal-list {
+//   transform: translate3d;
+// }
+
+.main .recent-deal-list .deal-item > img {
   width: 400px;
   height: 190px;
   object-fit: cover;
   border-radius: 10px 10px 0 0;
 }
 
-.main .recent-deal-list .swiper-slide > div {
+.main .recent-deal-list .deal-item .apt-name {
+  font-weight: bold;
+  color: #0a1151;
+  font-size: 14px;
+}
+
+.main .recent-deal-list .deal-item > div {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -534,28 +609,39 @@ export default {
   padding: 10px 30px;
 }
 
-.main .recent-deal-list .swiper-slide > div > div {
+.main .recent-deal-list .deal-item > div > div {
   display: flex;
   flex-direction: row;
   align-items: center;
   font-size: 14px;
 }
 
-.main .recent-deal-list .swiper-slide > div > div > a {
+.main .recent-deal-list .deal-item > div > div > a {
   display: flex;
   flex-direction: row;
   align-items: center;
   opacity: 0.5;
 }
 
-.main .recent-deal-list .swiper-slide > div > div > a:hover {
+.main .recent-deal-list .deal-item > div > div > a:hover {
   color: #1a73e8;
   opacity: 1;
 }
 
-.main .recent-deal-list .swiper-slide > div img {
+.main .recent-deal-list .deal-item > div img {
   width: 20px;
   height: 20px;
   margin-right: 10px;
+}
+
+.swiper-page {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 30px 0;
+}
+
+.swiper-page div {
+  margin: 0 20px;
 }
 </style>

@@ -17,7 +17,7 @@
             <div>
               <img class="apt-like-icon" src="@/assets/img/apt-icon.png" alt="apt-info" />
               <div>
-                {{ item.sidoName + " " + item.gugunName + "" + item.dong + " " + item.jibun }}
+                {{ item.sidoName + " " + item.gugunName + " " + item.dong + " " + item.jibun }}
               </div>
             </div>
             <div>
