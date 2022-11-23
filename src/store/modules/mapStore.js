@@ -6,6 +6,9 @@ const mapStore = {
     year: null,
     avgAmount: null,
     schoolList: null,
+    myReview: null,
+    reviewList: null,
+    starAvg: null,
   },
   mutations: {
     SET_APT: function (state, info) {
@@ -22,6 +25,15 @@ const mapStore = {
     },
     SET_SCHOOL_LIST: function (state, school) {
       state.schoolList = school;
+    },
+    SET_MY_REVIEW: function (state, myreview) {
+      state.myReview = myreview;
+    },
+    SET_REVIEW_LIST: function (state, reviewlist) {
+      state.reviewList = reviewlist;
+    },
+    SET_STAR_AVG: function (state, avg) {
+      state.starAvg = avg;
     },
   },
   actions: {},

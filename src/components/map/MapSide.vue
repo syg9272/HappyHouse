@@ -1,7 +1,9 @@
 <template>
   <div class="side-bar" v-if="this.isSide">
+    <Modal v-if="showModal" @close="showModal = false">
+      <h3 slot="header">리뷰</h3>
+    </Modal>
     <div>
-      <!-- <div id="roadview" class="apt-img"></div> -->
       <map-load-view :aptInfo="aptInfo"></map-load-view>
       <div class="close-side-bar">
         <img @click="closeSide()" src="@/assets/img/close-side-bar.png" alt="close-side-bar" />
@@ -134,29 +136,43 @@
         </table>
       </div>
       <map-chart :apt="apt"></map-chart>
-      <div class="review-title">
-        <div class="score">3.5</div>
+      <div class="info-title">리뷰</div>
+      <div @click.prevent="showModal = true" class="review-title">
+        <div class="score">{{ this.starAvg }}</div>
         <div>
-          <a href="">
-            <img src="@/assets/img/fullStar.png" alt="star1" />
-            <img src="@/assets/img/fullStar.png" alt="star2" />
-            <img src="@/assets/img/fullStar.png" alt="star3" />
-            <img src="@/assets/img/falfStar.png" alt="star4" />
-            <img src="@/assets/img/star.png" alt="star5" />
-          </a>
+          <img v-if="this.starAvg >= 1" src="@/assets/img/fullStar.png" alt="star1" />
+          <img v-else-if="this.starAvg <= 0" src="@/assets/img/star.png" alt="star1" />
+          <img v-else src="@/assets/img/halfStar.png" alt="star1" />
+
+          <img v-if="this.starAvg >= 2" src="@/assets/img/fullStar.png" alt="star1" />
+          <img v-else-if="this.starAvg <= 1" src="@/assets/img/star.png" alt="star1" />
+          <img v-else src="@/assets/img/halfStar.png" alt="star1" />
+
+          <img v-if="this.starAvg >= 3" src="@/assets/img/fullStar.png" alt="star1" />
+          <img v-else-if="this.starAvg <= 2" src="@/assets/img/star.png" alt="star1" />
+          <img v-else src="@/assets/img/halfStar.png" alt="star1" />
+
+          <img v-if="this.starAvg >= 4" src="@/assets/img/fullStar.png" alt="star1" />
+          <img v-else-if="this.starAvg <= 3" src="@/assets/img/star.png" alt="star1" />
+          <img v-else src="@/assets/img/halfStar.png" alt="star1" />
+
+          <img v-if="this.starAvg >= 5" src="@/assets/img/fullStar.png" alt="star1" />
+          <img v-else-if="this.starAvg <= 4" src="@/assets/img/star.png" alt="star1" />
+          <img v-else src="@/assets/img/halfStar.png" alt="star1" />
         </div>
-        <div class="count">리뷰 2개</div>
+        <div class="count">리뷰 {{ this.reviewList.length }}개</div>
       </div>
       <div class="review-content">
-        <div class="review">
-          대형마트, 백화점도 근교에 있고요. 용산 가족 공원도 도보로 갈 수 있어서 환경은 만족하고
-          있습니다. 교통도 ...
-        </div>
-        <div class="review">
-          대형마트, 백화점도 근교에 있고요. 용산 가족 공원도 도보로 갈 수 있어서 환경은 만족하고
-          있습니다. 교통도 ...
+        <div v-for="item in this.reviewList" :key="item" class="review">
+          <div>
+            {{ item.id | hideId }}
+          </div>
+          <div>
+            {{ item.content }}
+          </div>
         </div>
       </div>
+      <div class="end-div info-title"></div>
     </div>
   </div>
 </template>
@@ -164,6 +180,8 @@
 <script>
 import http from "@/api/http";
 import { mapState } from "vuex";
+
+import Modal from "@/components/map/MapReview.vue";
 
 // 숫자 오르는 애니메이션 라이브러리
 import AnimatedNumber from "animated-number-vue";
@@ -180,6 +198,7 @@ export default {
     MapChart,
     MapLoadView,
     AnimatedNumber,
+    Modal,
   },
   data() {
     return {
@@ -197,6 +216,8 @@ export default {
       elementList: [],
       middleList: [],
       highList: [],
+
+      showModal: false,
     };
   },
   computed: {
@@ -206,8 +227,14 @@ export default {
     ...mapState(mapStore, ["year"]),
     ...mapState(mapStore, ["avgAmount"]),
     ...mapState(mapStore, ["schoolList"]),
+    ...mapState(mapStore, ["myReview"]),
+    ...mapState(mapStore, ["reviewList"]),
+    ...mapState(mapStore, ["starAvg"]),
   },
   methods: {
+    changeModal() {
+      this.showModal = !this.showModal;
+    },
     selectEle() {
       this.isElement = true;
       this.isMiddle = false;
@@ -259,16 +286,28 @@ export default {
     this.aptInfo = this.apt;
     this.aptInfo.id = this.userInfo.id;
     await http.post("/apt/detailAptList", this.aptInfo).then((data) => {
-      console.log("디테일 정보 ~!~!~!~!", data.data);
-      console.log("디테일 정보 ~!~!~!~!", data.data.avgList);
       this.$store.commit("mapStore/SET_YEAR", data.data.year);
       this.$store.commit("mapStore/SET_AVG_AMOUNT", data.data.avgAmount);
       this.isLike = data.data.like;
       this.deal = data.data.list;
       this.aptInfo = data.data.list[0];
-      console.log("정보정보", data.data);
       this.aptRank = data.data.aptRank.rank;
       this.$store.commit("mapStore/SET_SCHOOL_LIST", data.data.schoolList);
+      if (data.data.myReview == null) {
+        data.data.myReview = {
+          grade: "0",
+          content: "",
+          id: this.userInfo.id,
+          aptCode: data.data.list[0].aptCode,
+          dong: data.data.list[0].dong,
+        };
+      }
+      data.data.myReview.id = this.userInfo.id;
+      data.data.myReview.aptCode = data.data.list[0].aptCode;
+      data.data.myReview.dong = data.data.list[0].dong;
+      this.$store.commit("mapStore/SET_MY_REVIEW", data.data.myReview);
+      this.$store.commit("mapStore/SET_REVIEW_LIST", data.data.reviewList);
+      this.$store.commit("mapStore/SET_STAR_AVG", data.data.avg);
       for (let index = 0; index < this.schoolList.length; index++) {
         const element = this.schoolList[index];
         element.distance += "km";
@@ -280,11 +319,16 @@ export default {
           this.highList.push(element);
         }
       }
-      console.log(this.elementList);
-      console.log(this.middleList);
-      console.log(this.highList);
     });
-    console.log("아파트 정보 ~!!!!", this.aptInfo);
+  },
+  filters: {
+    hideId: function (value) {
+      var hide = value.substring(0, 3);
+      for (var i = 0; i < value.length - 3; i++) {
+        hide += "*";
+      }
+      return hide;
+    },
   },
 };
 </script>
@@ -348,7 +392,6 @@ export default {
   flex-direction: row;
   align-items: center;
   padding: 20px 20px 20px 40px;
-  /* border-bottom: 0.3px double rgba(0, 0, 0, 0.274); */
 }
 
 .side-bar .detail-info .detail-title div {
@@ -368,13 +411,6 @@ export default {
   border-bottom: 0.3px solid rgba(0, 0, 0, 0.274);
   padding: 20px 20px 20px 40px;
 }
-
-/* .side-bar .detail-info .apt-rank .apt-rank-title {
-  font-size: 18px;
-  font-weight: bold;
-  color: #1a73e8;
-  margin-bottom: 20px;
-} */
 
 .side-bar .detail-info .apt-rank .apt-rank-list {
   width: 80%;
@@ -507,6 +543,7 @@ export default {
   align-items: center;
   padding: 25px 20px 25px 50px;
   border-bottom: 0.3px dotted rgba(0, 0, 0, 0.274);
+  cursor: pointer;
 }
 
 .side-bar .review-title > div {
@@ -526,5 +563,13 @@ export default {
   color: rgba(0, 0, 0, 0.5);
   padding: 25px 20px 25px 50px;
   border-bottom: 0.3px dotted rgba(0, 0, 0, 0.274);
+}
+
+.side-bar .review div {
+  margin: 10px 0;
+}
+
+.end-div {
+  padding: 0 !important;
 }
 </style>
