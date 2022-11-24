@@ -20,13 +20,13 @@
         <div class="content">
           {{ article.content }}
         </div>
-        <div class="view-file">
+        <!-- <div class="view-file">
           <div>첨부파일 ({{ article.fileInfos.legth }})</div>
           <div class="file-list">
             <a href="#"><img src="@/assets/img/file.png" alt="file" /></a>
             <a href="#">10월 21일 1.6 버전 업데이트 별첨.pdf</a>
           </div>
-        </div>
+        </div> -->
         <button @click="moveService()" class="move-list">목록으로</button>
       </div>
     </div>

@@ -69,6 +69,7 @@ export default {
 }
 .swiper-container .swiper-slide a {
   color: #0a1151;
+  cursor: pointer;
 }
 
 .swiper-container .swiper-slide a:hover {

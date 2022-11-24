@@ -16,13 +16,13 @@
         <div class="content">
           <textarea v-model="article.content" />
         </div>
-        <div class="view-file">
+        <!-- <div class="view-file">
           <div>첨부파일 ({{ article.fileInfos.legth }})</div>
           <div class="file-list">
             <a href="#"><input value="파일" type="file" /></a>
             <a href="#">10월 21일 1.6 버전 업데이트 별첨.pdf</a>
           </div>
-        </div>
+        </div> -->
         <div class="modify-btn">
           <button @click="moveView()" class="cancel-modify">취소</button>
           <button @click="modifyArticle()" class="move-view">수정</button>

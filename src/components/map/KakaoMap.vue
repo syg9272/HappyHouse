@@ -209,10 +209,10 @@ export default {
 
       window.kakao.maps.event.addListener(this.map, "center_changed", () => {
         let latlng = this.map.getCenter();
-        if (latlng.getLat() < this.lat - 0.007) this.lat = latlng.getLat();
-        if (latlng.getLat() > Number(this.lat) + 0.007) this.lat = latlng.getLat();
-        if (latlng.getLng() < this.lng - 0.007) this.lng = latlng.getLng();
-        if (latlng.getLng() > Number(this.lng) + 0.007) this.lng = latlng.getLng();
+        if (latlng.getLat() < this.lat - 0.01) this.lat = latlng.getLat();
+        if (latlng.getLat() > Number(this.lat) + 0.01) this.lat = latlng.getLat();
+        if (latlng.getLng() < this.lng - 0.01) this.lng = latlng.getLng();
+        if (latlng.getLng() > Number(this.lng) + 0.01) this.lng = latlng.getLng();
       });
       // 마커 이미지의 이미지 주소입니다
       var imageSrc = require("@/assets/img/apt.png");

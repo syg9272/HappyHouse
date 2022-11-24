@@ -210,6 +210,8 @@ export default {
       if (this.key == "선택안함") newKey = "";
       else if (this.key == "제목") newKey = "subject";
       else newKey = "userid";
+
+      console.log("dkdkdkdk", newKey, this.word);
       http
         .get("/notice/list", {
           params: {
@@ -219,6 +221,8 @@ export default {
           },
         })
         .then((data) => {
+          console.log(data);
+
           this.articles = data.data.articles;
           this.key = "선택안함";
           this.word = "";

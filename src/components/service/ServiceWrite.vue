@@ -65,9 +65,25 @@ export default {
       formData.append("id", "admin");
       formData.append("subject", this.article.subject);
       formData.append("content", this.article.content);
+      console.log(this.fileInfos.length);
       // formData.append("notice", this.article);
-      for (const file of this.fileInfos) {
-        formData.append("upfile", file);
+      if (this.fileInfos.length != 0) {
+        for (const file of this.fileInfos) {
+          formData.append("upfile", file);
+        }
+        axios
+          .post("http://localhost:9999/notice/register", formData, {
+            headers: { "context-Type": "muLtipart/form-data" },
+          })
+          .then((data) => {
+            console.log(data);
+            this.$router.push({ name: "servicenotice" });
+          });
+      } else {
+        axios.post("http://localhost:9999/notice/register/nofile", this.article).then((data) => {
+          console.log(data);
+          this.$router.push({ name: "servicenotice" });
+        });
       }
       console.log("글들어갔니?", formData.get("id"));
       console.log("글들어갔니?", formData.get("subject"));
@@ -77,14 +93,6 @@ export default {
       //   notice: this.article,
       //   upfile: this.fileInfos,
       // };
-      axios
-        .post("http://localhost:9999/notice/register", formData, {
-          headers: { "context-Type": "muLtipart/form-data" },
-        })
-        .then((data) => {
-          console.log(data);
-          this.$router.push({ name: "servicenotice" });
-        });
     },
     changeFile(e) {
       console.log(e.target.files);
