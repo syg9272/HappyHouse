@@ -21,10 +21,17 @@
           {{ article.content }}
         </div>
         <div class="view-file">
-          <div>첨부파일 ({{ article.fileInfos.legth }})</div>
+          <div>첨부파일 ({{ article.fileInfos.length }})</div>
           <div class="file-list">
-            <a href="#"><img src="@/assets/img/file.png" alt="file" /></a>
-            <a href="#">10월 21일 1.6 버전 업데이트 별첨.pdf</a>
+            <a><img src="@/assets/img/file.png" alt="file" /></a>
+            <a
+              @click.prevent="downloadFile(index)"
+              class="file-name"
+              v-for="(item, index) in article.fileInfos"
+              :key="item"
+              :article="article"
+              >{{ item.originalFile }}</a
+            >
           </div>
         </div>
         <button @click="moveService()" class="move-list">목록으로</button>
@@ -48,9 +55,26 @@ export default {
       pgno: null,
       key: null,
       word: null,
+      // files: null,
     };
   },
   methods: {
+    downloadFile(index) {
+      http
+        .get("/notice/download", {
+          params: {
+            sfolder: this.article.fileInfos[index].saveFolder,
+            ofile: this.article.fileInfos[index].originalFile,
+            sfile: this.article.fileInfos[index].saveFile,
+          },
+          // headers: { "context-Type": "application/text" },
+        })
+        .then((data) => {
+          console.log(data);
+          console.log(data.request.responseURL);
+          location.href = data.request.responseURL;
+        });
+    },
     moveService() {
       this.$router.push({
         name: "service",
@@ -105,6 +129,8 @@ export default {
         },
       })
       .then((data) => {
+        console.log("글 상세보기", data.data);
+        // this.files = data.data.notice
         this.article = data.data.notice;
         this.pgno = data.data.pgno;
         this.key = data.data.key;
@@ -235,5 +261,9 @@ export default {
   font-weight: bold;
   font-size: 16px;
   margin: auto;
+}
+
+.file-name {
+  margin: 0 10px;
 }
 </style>

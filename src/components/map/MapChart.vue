@@ -49,6 +49,7 @@ export default {
   created() {
     this.data.labels = this.year;
     this.data.datasets[0].data = this.avgAmount;
+    console.log(this.avgAmount);
 
     var maxAvg = 0;
     var minAvg = 100;

@@ -54,12 +54,7 @@
             </div>
             <div>
               <a href="#">
-                <img
-                  v-if="article.fileInfos"
-                  class="file-img"
-                  src="@/assets/img/file.png"
-                  alt="file"
-                />
+                <img v-if="article.idx" class="file-img" src="@/assets/img/file.png" alt="file" />
               </a>
               <div>{{ article.registerTime.substring(0, 10) }}</div>
             </div>
@@ -266,6 +261,8 @@ export default {
         },
       })
       .then((data) => {
+        console.log("공지사항 목록", data.data);
+
         this.articles = data.data.articles;
         this.navigator = data.data.navigator;
         this.key = "선택안함";
@@ -425,7 +422,7 @@ export default {
   background-color: rgba(10, 17, 81, 0.1);
   height: 88%;
   width: 100%;
-  padding: 50px 0 50px 0;
+  padding: 40px 0 30px 0;
 }
 
 .notice .notice-write {
@@ -497,22 +494,11 @@ export default {
   line-height: 22px;
   font-size: 12px;
 }
-
-/* .notice .notice-list .page {
-  margin-top: 40px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-} */
-
 .notice .pagenavigation {
-  /* position: fixed; */
-  /* bottom: 100px; */
-  /* left: 750px; */
-  /* margin: 0 auto; */
   display: flex;
   flex-direction: row;
   justify-content: center;
+  margin-top: 30px;
   z-index: 99;
 }
 

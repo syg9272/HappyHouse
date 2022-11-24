@@ -1,11 +1,12 @@
 <template>
   <main>
     <div class="view">
+      <!-- <form id="view-form" enctype="multipart/form-data"> -->
       <div class="title">공지사항</div>
       <div class="view-header">
         <div>
           <div class="view-type">공지사항</div>
-          <input v-model="article.subject" class="view-title" />
+          <input value="subject" v-model="article.subject" class="view-title" />
         </div>
         <div>
           <!-- <div class="view-hit">조회수 : {{ article.hit }}</div> -->
@@ -14,13 +15,13 @@
       </div>
       <div class="view-content">
         <div class="content">
-          <textarea v-model="article.content" />
+          <textarea value="content" v-model="article.content" />
         </div>
         <div class="view-file">
           <div>첨부파일 ({{ fileInfos.length }})</div>
           <div class="file-list">
             <a href="#"
-              ><input value="파일" type="file" @change="changeFile" multiple="multiple"
+              ><input value="files" type="file" @change="changeFile" multiple="multiple"
             /></a>
             <!-- <a href="#">10월 21일 1.6 버전 업데이트 별첨.pdf</a> -->
           </div>
@@ -30,12 +31,14 @@
           <button @click="registArticle()" class="move-view">등록</button>
         </div>
       </div>
+      <!-- </form> -->
     </div>
   </main>
 </template>
 
 <script>
-import http from "@/api/http";
+import axios from "axios";
+// import http from "@/api/http";
 // import { mapState } from "vuex";
 
 // const memberStore = "memberStore";
@@ -57,15 +60,31 @@ export default {
       this.$router.push({ name: "servicenotice" });
     },
     registArticle() {
-      console.log(this.article);
-      var vo = {
-        notice: this.article,
-        upfile: this.fileInfos,
-      };
-      http.post("/notice/register", vo).then((data) => {
-        console.log(data);
-        this.$router.push({ name: "servicenotice" });
-      });
+      console.log("글글글", this.article);
+      const formData = new FormData();
+      formData.append("id", "admin");
+      formData.append("subject", this.article.subject);
+      formData.append("content", this.article.content);
+      // formData.append("notice", this.article);
+      for (const file of this.fileInfos) {
+        formData.append("upfile", file);
+      }
+      console.log("글들어갔니?", formData.get("id"));
+      console.log("글들어갔니?", formData.get("subject"));
+      console.log("글들어갔니?", formData.get("content"));
+      console.log("파일들어갔니?", formData.get("upfile"));
+      // var vo = {
+      //   notice: this.article,
+      //   upfile: this.fileInfos,
+      // };
+      axios
+        .post("http://localhost:9999/notice/register", formData, {
+          headers: { "context-Type": "muLtipart/form-data" },
+        })
+        .then((data) => {
+          console.log(data);
+          this.$router.push({ name: "servicenotice" });
+        });
     },
     changeFile(e) {
       console.log(e.target.files);

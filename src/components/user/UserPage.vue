@@ -6,12 +6,21 @@
       <div class="mypage-top">
         <div class="mypage-info">
           <div>
-            <img class="profile" :src="userImg" alt="profile" />
+            <img class="profile" :src="this.profileImg" alt="profile" />
           </div>
           <label>{{ userInfo.name }}</label>
         </div>
         <div>
-          <button class="profile-change-btn">Change</button>
+          <!-- <input class="file-input" type="file" value="" /> -->
+          <button @click="$refs.fileRef.click()" class="profile-change-btn">Change</button>
+          <input
+            class="file-input"
+            value="files"
+            type="file"
+            @change="changeFile"
+            ref="fileRef"
+            multiple
+          />
           <button @click="removeProfile()" class="profile-remove-btn">Remove</button>
         </div>
       </div>
@@ -54,27 +63,50 @@ export default {
       passCheck: null,
       passMsg: null,
       userImg: null,
-      img: "profile.png",
+      img: null,
+
+      fileInfos: null,
     };
   },
   computed: {
     ...mapState(memberStore, ["userInfo"]),
+    ...mapState(memberStore, ["profileImg"]),
   },
   created() {
     // 현재 토큰에 저장되어 있는 user 프로필 여부에 따라 이미지 경로 설정
-    if (this.userInfo.img == null) {
+    if (this.profileImg == null) {
       this.userImg = require("../../assets/img/profile.png");
+      // this.img = "profile.png";
     } else {
-      this.img = this.userInfo.img;
-      this.userImg = `require("../../assets/img/${this.userInfo.img}")`;
+      this.userImg = this.profileImg;
     }
     console.log(this.userInfo);
   },
   methods: {
+    changeFile(e) {
+      console.log(e.target.files);
+      const fileData = (data) => {
+        this.userImg = data;
+        this.$store.commit("memberStore/SET_PROFILE_IMG", data);
+      };
+
+      // this.fileInfos = e.target.file;
+      const reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+      reader.addEventListener(
+        "load",
+        function () {
+          fileData(reader.result);
+        },
+        false
+      );
+
+      console.log(this.userImg);
+    },
     removeProfile() {
       // user 프로필 이미지 띄우기
-      this.img = "profile.png";
-      this.userImg = require("../../assets/img/profile.png");
+      // this.img = "profile.png";
+      // this.userImg = require("../../assets/img/profile.png");
     },
     passwordCheck() {
       // 비밀번호 입력창 두 개가 일치한지 판별
@@ -92,7 +124,6 @@ export default {
       this.$router.push({ name: "main" });
     },
     moveMain() {
-      // user 정보 수정사항 업데이트 후 메인으로 이동
       http.put("/member/modify", this.userInfo).then((data) => {
         console.log(data);
       });
@@ -123,8 +154,6 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* pa-right: 20px; */
-  padding: 8px 14px 8px 8px;
 }
 
 .mypage .mypage-top {
@@ -186,5 +215,9 @@ export default {
   border: 0px;
   color: white;
   background-color: #4e60ff;
+}
+
+.file-input {
+  display: none;
 }
 </style>

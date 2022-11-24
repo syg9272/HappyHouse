@@ -96,6 +96,7 @@ export default {
       // console.log("1. confirm() token >> " + token);
       if (this.isLogin) {
         await this.getUserInfo(token);
+        console.log("유저 정보정보", this.userInfo);
         console.log(this.user.saveid);
         if (this.checkedValues == "true") Cookies.set("userId", this.user.id, { expires: 7 });
         else Cookies.remove("userId");

@@ -9,6 +9,7 @@ const memberStore = {
     isLoginError: false,
     userInfo: null,
     isValidToken: false,
+    profileImg: require("../../assets/img/profile.png"),
   },
   getters: {
     checkUserInfo: function (state) {
@@ -16,6 +17,9 @@ const memberStore = {
     },
     checkToken: function (state) {
       return state.isValidToken;
+    },
+    checkProfile: function (state) {
+      return state.profileImg;
     },
   },
   mutations: {
@@ -31,6 +35,9 @@ const memberStore = {
     SET_USER_INFO: (state, userInfo) => {
       state.isLogin = true;
       state.userInfo = userInfo;
+    },
+    SET_PROFILE_IMG: function (state, img) {
+      state.profileImg = img;
     },
   },
   actions: {
@@ -99,6 +106,7 @@ const memberStore = {
             console.log("갱신 실패");
             // 다시 로그인 전 DB에 저장된 RefreshToken 제거.
             await logout(
+              // commit("memberStore/SET_PROFILE_IMG", require("../../assets/img/profile.png")),
               state.userInfo.userid,
               ({ data }) => {
                 if (data.message === "success") {
@@ -130,6 +138,7 @@ const memberStore = {
             commit("SET_IS_LOGIN", false);
             commit("SET_USER_INFO", null);
             commit("SET_IS_VALID_TOKEN", false);
+            commit("memberStore/SET_PROFILE_IMG", require("../../assets/img/profile.png"));
           } else {
             console.log("유저 정보 없음!!!!");
           }

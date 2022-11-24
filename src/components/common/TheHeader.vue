@@ -19,7 +19,7 @@
         >
         <router-link v-else :to="{ name: 'mypage' }" class="nav-menu">MYPAGE</router-link>
         <div class="profile-img">
-          <img class="profile" :src="user.img" alt="profile" />
+          <img class="profile" :src="profileImg" alt="profile" />
         </div>
       </div>
     </nav>
@@ -36,13 +36,21 @@ export default {
   data() {
     return {
       user: {
-        img: require("../../assets/img/profile.png"),
+        img: null,
       },
     };
+  },
+  created() {
+    // if (this.profileImg == null) {
+    //   this.user.img = require("../../assets/img/profile.png");
+    // } else {
+    //   this.user.img = this.profileImg;
+    // }
   },
   computed: {
     ...mapState(memberStore, ["isLogin", "userInfo"]),
     ...mapGetters(["checkUserInfo"]),
+    ...mapState(memberStore, ["profileImg"]),
   },
   methods: {
     ...mapActions(memberStore, ["userLogout"]),
@@ -53,6 +61,7 @@ export default {
       // sessionStorage.removeItem("access-token");
       // if (this.$route.path != "/") this.$router.push({ name: "main" });
       console.log(this.userInfo.userid);
+      this.$store.commit("memberStore/SET_PROFILE_IMG", require("../../assets/img/profile.png"));
       //vuex actions에서 userLogout 실행(Backend에 저장 된 리프레시 토큰 없애기
       //+ satate에 isLogin, userInfo 정보 변경)
       // this.$store.dispatch("userLogout", this.userInfo.userid);
@@ -118,5 +127,6 @@ header .profile {
   border-radius: 50%;
   width: 50px;
   height: 50px;
+  object-fit: cover;
 }
 </style>

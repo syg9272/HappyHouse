@@ -288,7 +288,7 @@ export default {
 .swiper .swiper-slide-active {
   /* 가운데 있는 이미지:active */
   opacity: 1;
-  transition: all 0.1s linear;
+  transition: all 1s linear;
 }
 
 .swiper .swiper-slide:hover {

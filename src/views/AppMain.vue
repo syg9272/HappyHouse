@@ -104,33 +104,12 @@
         </div>
         <div class="recent-deal-list">
           <the-swiper :aptRank="aptRank"></the-swiper>
-          <!-- <div v-for="(item, index) in aptRank" :key="index" :aptRank="aptRank" class="deal-item">
-            <img :src="aptImg[index]" alt="recent-deal-apt" />
-            <div>
-              <div class="apt-name">{{ item.apartmentName + " 아파트" }}</div>
-              <div>
-                <img class="apt-like-icon" src="@/assets/img/apt-icon.png" alt="apt-info" />
-                <div>
-                  {{ item.sidoName + " " + item.gugunName + " " + item.dong + " " + item.jibun }}
-                </div>
-              </div>
-              <div>
-                <a
-                  @click.prevent="
-                    moveApt(item.aptCode, item.dongCode, item.dong, item.apartmentName)
-                  "
-                  ><img class="apt-like-icon" src="@/assets/img/plus.png" alt="move-apt" />아파트
-                  보러가기</a
-                >
-              </div>
-            </div>
-          </div> -->
         </div>
       </div>
 
       <div class="notice-bar">
         <h2>NOTICE</h2>
-        <the-notice></the-notice>
+        <the-notice :notice="notice"></the-notice>
       </div>
     </div>
   </main>
@@ -167,6 +146,7 @@ export default {
       dong: null,
       dongRank: null,
       aptRank: null,
+      notice: null,
     };
   },
   methods: {
@@ -194,6 +174,11 @@ export default {
     },
   },
   created() {
+    http.get("/notice/selectRecentList").then((data) => {
+      console.log(data.data);
+      this.notice = data.data;
+    });
+
     http.get("/apt/selectDongRankList").then((data) => {
       console.log("동 랭킹", data.data);
       this.dongRank = data.data;
