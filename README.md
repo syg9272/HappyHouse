@@ -47,3 +47,9 @@
 ![image](https://user-images.githubusercontent.com/55950992/232938255-cb340857-1af3-4881-b446-95c7b1956016.png)
 ![image](https://user-images.githubusercontent.com/55950992/232938303-dcd9fdca-88dc-4675-91e5-105bac0772b0.png)
 ![image](https://user-images.githubusercontent.com/55950992/232938331-23832923-b002-406a-9c87-7aae3e4a74ad.png)
+
+
+✔️**시연 영상**
+<br />
+<br />
+https://youtu.be/_r0iN68P8Zo?si=CBUxvzhbfzGx6frA
